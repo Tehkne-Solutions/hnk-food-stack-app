@@ -9,6 +9,7 @@
 ## 🎯 HOJE (26 JAN)
 
 ### Verificações
+
 - [x] Documentação de status criada
 - [x] Roadmap de 12 semanas estruturado
 - [x] 4 ciclos de desenvolvimento mapeados
@@ -16,6 +17,7 @@
 - [x] Zero erros de build em FASE 3-4
 
 ### Ações do Desenvolvedor
+
 - [ ] Ler `STATUS-ATUAL-E-PLANO-MICROFASES.md` completamente
 - [ ] Revisar `ROADMAP-VISUAL.md` com timeline
 - [ ] Preparar ambiente para FASE 4.5
@@ -26,7 +28,9 @@
 ## 📅 PRÓXIMAS 48 HORAS (27-28 JAN)
 
 ### TAREFA 1: Google Analytics 4 Setup (2h)
+
 **Arquivo**: `src/lib/analytics.ts` (novo)
+
 ```
 - [ ] Criar GA4 property no Google Analytics
 - [ ] Obter Measurement ID (G-XXXXXXXXXX)
@@ -42,7 +46,9 @@
 ---
 
 ### TAREFA 2: Meta Pixel Integration (2h)
+
 **Arquivo**: `src/lib/meta-pixel.ts` (novo)
+
 ```
 - [ ] Obter Pixel ID do Meta Business Suite (cliente)
 - [ ] Criar `src/lib/meta-pixel.ts` com Meta SDK
@@ -58,7 +64,9 @@
 ---
 
 ### TAREFA 3: Estruturar Carrinho (4h)
+
 **Arquivo**: Melhorar `src/stores/cartStore.ts`
+
 ```
 - [ ] Expandir Zustand store com: addItem, removeItem, getTotal
 - [ ] Adicionar persistência localStorage
@@ -76,6 +84,7 @@
 ## 🗓️ SEMANA 1 (27 JAN - 02 FEV)
 
 ### Seg-Ter (27-28 JAN): Tasks acima
+
 ```
 - GA4 Setup                   ✅ 2h
 - Meta Pixel                  ✅ 2h
@@ -85,7 +94,9 @@
 ```
 
 ### Qua-Qui (29-30 JAN): Event Tracking
+
 **TAREFA 4: Event Tracking Engine (3h)**
+
 ```
 - [ ] Criar `src/lib/event-tracker.ts`
 - [ ] Implementar: trackProductView, trackAddToCart, trackCheckout
@@ -95,6 +106,7 @@
 ```
 
 **TAREFA 5: DataLayer GTM (2h)**
+
 ```
 - [ ] Criar `src/lib/data-layer.ts`
 - [ ] Padronizar estrutura de eventos
@@ -103,6 +115,7 @@
 ```
 
 ### Sex-Sab (31 JAN - 01 FEV): Testes + Deploy
+
 ```
 - [ ] Testes manuais em staging
 - [ ] Fix de bugs encontrados
@@ -111,6 +124,7 @@
 ```
 
 ### Dom (02 FEV): Buffer + Revisão
+
 ```
 - [ ] Revisão completa de FASE 4
 - [ ] Documentação das mudanças
@@ -123,6 +137,7 @@
 ## 📋 CHECKLIST GERAL DE DEPENDÊNCIAS
 
 ### ✅ Já Temos
+
 - [x] Vitrine Bem Estar completa
 - [x] Design System (12 componentes)
 - [x] Meta tags dinâmicas
@@ -132,6 +147,7 @@
 - [x] TypeScript strict mode
 
 ### ⏳ PRECISA FAZER (ORDEM)
+
 1. [ ] **GA4 + Meta Pixel** (inicio HOJE)
 2. [ ] **Event Tracking** (inicio amanhã)
 3. [ ] **Carrinho completo** (inicio Qua)
@@ -141,6 +157,7 @@
 7. [ ] **Otimização final** (semana 4)
 
 ### ⚠️ BLOQUEANTES COM CLIENTE
+
 - [ ] Stripe Account Setup (com Seu Junior)
 - [ ] PIX Receiver Keys (com Seu Junior)
 - [ ] WhatsApp Business Account (com Seu Junior)
@@ -170,6 +187,7 @@ git log --oneline | head -20
 ## 📊 MÉTRICAS DE SUCESSO
 
 ### Após FASE 4.5 (GA4 Setup)
+
 ```
 ✅ GA4 Property criada
 ✅ Eventos começam a aparecer em 24-48h
@@ -178,6 +196,7 @@ git log --oneline | head -20
 ```
 
 ### Após FASE 4.6 (Meta Pixel)
+
 ```
 ✅ Meta Business Suite mostrando eventos
 ✅ Facebook Pixel Helper validando
@@ -186,6 +205,7 @@ git log --oneline | head -20
 ```
 
 ### Após FASE 4.8-4.9 (Event Tracking)
+
 ```
 ✅ Todos os cliques rastreados
 ✅ E-commerce data fluindo
@@ -198,6 +218,7 @@ git log --oneline | head -20
 ## 🚀 DEPLOY STRATEGY
 
 ### Staging
+
 ```
 Ambiente: staging.hnk-food-stack.dev
 Deploy: main branch (automático com GitHub Actions)
@@ -205,6 +226,7 @@ Testing: Manual + Automated
 ```
 
 ### Produção
+
 ```
 Ambiente: bem-estar.hnk-food-stack.app
 Deploy: Release tags (manual)
@@ -217,6 +239,7 @@ Monitoring: Google Analytics + Meta Pixel
 ## 📞 COMUNICAÇÃO COM CLIENTE
 
 ### Email para Seu Junior
+
 ```
 Assunto: HNK Food Stack - Próximas Etapas (Documentação)
 
@@ -241,6 +264,7 @@ Aguardamos seus contatos!
 Abraços,
 Tim Técnico HNK
 ```
+
 ```
 
 ---
@@ -248,6 +272,7 @@ Tim Técnico HNK
 ## 📁 ARQUIVOS A CRIAR/MODIFICAR
 
 ```
+
 CRIAR:
 ├── src/lib/analytics.ts                    (GA4 setup)
 ├── src/lib/meta-pixel.ts                   (Meta Pixel)
@@ -262,6 +287,7 @@ MODIFICAR:
 ├── src/components/ui/ProductCard.tsx       (+ evento de clique)
 ├── .env.local                              (+ GA4_ID, PIXEL_ID)
 └── tailwind.config.ts                      (se precisar novos estilos)
+
 ```
 
 ---

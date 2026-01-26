@@ -9,6 +9,7 @@ Implementação completa de otimização de imagens com Next/Image para máximo 
 ## 📊 Otimizações Implementadas
 
 ### 1. ProductCard.tsx (189 linhas)
+
 ```tsx
 <Image
   src={product.image}
@@ -25,6 +26,7 @@ Implementação completa de otimização de imagens com Next/Image para máximo 
 ```
 
 ### 2. FeaturedProduct.tsx (165 linhas)
+
 ```tsx
 <Image
   src={image}
@@ -56,11 +58,13 @@ Implementação completa de otimização de imagens com Next/Image para máximo 
 ## 🔧 Configurações Next/Image
 
 ### Quality Settings
+
 - **ProductCard**: 85% (grid items, non-critical)
 - **FeaturedProduct**: 90% (hero, visible above fold)
 - **Default**: 75% (fallback)
 
 ### Sizes Attribute
+
 ```tsx
 // ProductCard - 3 breakpoints
 "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -70,6 +74,7 @@ Implementação completa de otimização de imagens com Next/Image para máximo 
 ```
 
 ### Loading Strategy
+
 ```tsx
 priority={true}   // Hero/Featured products
 priority={false}  // Grid items (lazy loaded)
@@ -77,6 +82,7 @@ loading="lazy"    // Explicit lazy load hint
 ```
 
 ### Placeholder Blur
+
 ```tsx
 placeholder="blur"
 blurDataURL="data:image/svg+xml,%3Csvg...%3E"
@@ -124,23 +130,28 @@ PWA: 85/100
 ## 🎓 Best Practices Aplicadas
 
 ✅ **Static Images**
+
 - Imports estáticos quando possível
 - Type safety automática
 
 ✅ **Responsive Images**
+
 - `sizes` prop para cada layout
 - Breakpoints alinhados com Tailwind
 
 ✅ **Performance**
+
 - `priority` para above-fold content
 - `lazy` loading para grid items
 - `quality` otimizado por contexto
 
 ✅ **UX**
+
 - Blur placeholder durante carregamento
 - Smooth transition sem layout shift
 
 ✅ **Accessibility**
+
 - Alt text descritivo em todas as imagens
 - Semantic HTML maintained
 
@@ -149,6 +160,7 @@ PWA: 85/100
 ## 📌 Integração com Design System
 
 Cores de blur alinhadas com paleta Ember:
+
 ```
 Zinc-900: #18181b (padrão geral)
 Ember-Dark: #1a1410 (cards premium)

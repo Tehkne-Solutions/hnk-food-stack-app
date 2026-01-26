@@ -1,82 +1,36 @@
 'use client'
 
 import { useEffect } from 'react'
-import Script from 'next/script'
-import { trackAnalyticsEvent } from '@/services/analytics'
+import { initializeGA4, initializeMetaPixel, ANALYTICS_CONFIG } from '@/lib/analytics'
+import { initializeDataLayer } from '@/lib/data-layer'
 
 /**
  * AnalyticsProvider
- * Carrega Meta Pixel e Google Analytics globalmente
- * HNK-GIP Pattern: Analytics com LGPD compliance
+ * Inicializa GA4, Meta Pixel e DataLayer (GTM) globalmente
+ * HNK-GIP Pattern: Analytics com LGPD compliance + Mock Mode para desenvolvimento
  * 
- * Renderiza:
- * 1. Meta Pixel script
- * 2. Google Analytics script
- * 3. Cookie consent banner
+ * Suporta:
+ * 1. Google Analytics 4 (com mock mode)
+ * 2. Meta Pixel (com mock mode)
+ * 3. GTM DataLayer (com mock mode)
+ * 4. Cookie consent LGPD
  */
 export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
-    const facebookPixelId = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || ''
-    const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''
-
     useEffect(() => {
-        // Disparar PageView quando component monta
-        trackAnalyticsEvent('PageView', {
-            page_title: document.title,
-            page_path: window.location.pathname,
-        })
+        // Inicializar sistemas de tracking
+        initializeGA4()
+        initializeMetaPixel()
+        initializeDataLayer()
+
+        // Log status em desenvolvimento
+        if (ANALYTICS_CONFIG.isDevelopment) {
+            console.log('📊 Analytics initialized:')
+            console.log('  • GA4:', ANALYTICS_CONFIG.ga4Id)
+            console.log('  • Meta Pixel:', ANALYTICS_CONFIG.metaPixelId)
+            console.log('  • Mock Mode:', ANALYTICS_CONFIG.isMockMode)
+            console.log('  💡 Tip: Use printAnalyticsStatus() to see debug info')
+        }
     }, [])
 
-    return (
-        <>
-            {/* Meta Pixel */}
-            {facebookPixelId && (
-                <Script
-                    id="fb-pixel"
-                    strategy="afterInteractive"
-                    dangerouslySetInnerHTML={{
-                        __html: `
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '${facebookPixelId}');
-fbq('track', 'PageView');
-            `,
-                    }}
-                />
-            )}
-
-            {/* Google Analytics 4 */}
-            {googleAnalyticsId && (
-                <>
-                    <Script
-                        strategy="afterInteractive"
-                        src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
-                    />
-                    <Script
-                        id="google-analytics"
-                        strategy="afterInteractive"
-                        dangerouslySetInnerHTML={{
-                            __html: `
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${googleAnalyticsId}', {
-  page_path: window.location.pathname,
-});
-            `,
-                        }}
-                    />
-                </>
-            )}
-
-            {children}
-
-            {/* Cookie Consent Banner - renderizará separadamente */}
-        </>
-    )
+    return <>{children}</>
 }

@@ -1,12 +1,12 @@
 /**
  * @name ProductCard Component - Elite Edition
  * @description Glassmorphism card com Framer Motion, analytics tracking e prova social dinâmica
- * @version 2.0 - Nível de Excelência
+ * @version 3.0 - Com novo Event Tracker + DataLayer
  * 
  * Features:
  * - Glassmorphism com efeito de glow no hover
  * - Animações suaves com Framer Motion (enter, hover, tap)
- * - Rastreamento automático de cliques (GTM + Meta Pixel)
+ * - Rastreamento automático de cliques (GA4 + Meta Pixel + GTM)
  * - "Prova social dinâmica" (contador de pessoas que pediram)
  * - Mobile tap feedback (whileTap)
  * - Otimização de imagem com Next.js Image
@@ -27,7 +27,9 @@ import { motion } from 'framer-motion'
 import { Plus, Flame } from 'lucide-react'
 import Image from 'next/image'
 import { PriceTag } from './PriceTag'
-import { trackAddToCart, trackViewContent, buildUtmLink } from '@/lib/analytics'
+import { trackProductView, trackProductAddToCart } from '@/lib/event-tracker'
+import { trackProductView as trackDataLayerView } from '@/lib/data-layer'
+import { buildUtmLink } from '@/lib/analytics'
 import { generateSocialProof, getUrgencyBadge } from '@/utils/social-proof'
 
 interface Product {
@@ -76,14 +78,43 @@ export function ProductCard({
     }
 
     /**
-     * Track event - integrado com Google Analytics 4 e Meta Pixel
-     * Envia evento de seleção de produto para ambas as plataformas
+     * Handle view product com rastreamento completo
+     * Dispara eventos para GA4, Meta Pixel e DataLayer
      */
-    const handleTrackClick = () => {
-        trackAddToCart({
+    const handleViewClick = () => {
+        // Event Tracker (GA4 + Meta Pixel)
+        trackProductView({
             id: product.id,
             name: product.name,
             price: product.price,
+            category: 'churrascaria',
+            image: product.image,
+        })
+
+        // DataLayer (GTM)
+        trackDataLayerView({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            category: 'churrascaria',
+        })
+
+        if (onViewProduct) {
+            onViewProduct(product)
+        }
+    }
+
+    /**
+     * Handle add to cart com rastreamento completo
+     * Dispara eventos para GA4, Meta Pixel e DataLayer
+     */
+    const handleAddClick = () => {
+        // Event Tracker (GA4 + Meta Pixel)
+        trackProductAddToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
             category: 'churrascaria',
         })
 
@@ -96,33 +127,13 @@ export function ProductCard({
             }
         )
 
-        console.log('[ProductCard] Tracked:', {
+        console.log('[ProductCard] Product Added:', {
             product: product.name,
             price: product.price,
             utm: utmLink,
         })
-    }
 
-    /**
-     * Handle add to cart com rastreamento
-     */
-    const handleAddClick = () => {
-        handleTrackClick()
         onAddToCart(product)
-    }
-
-    /**
-     * View product tracking (opcional)
-     */
-    const handleViewClick = () => {
-        if (onViewProduct) {
-            trackViewContent({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-            })
-            onViewProduct(product)
-        }
     }
 
     // Container animation variants

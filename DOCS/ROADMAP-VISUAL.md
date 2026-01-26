@@ -218,16 +218,19 @@ Alvo Final: Abril de 2026 (100% pronto para produção)
 ## 🎯 PRÓXIMOS PASSOS IMEDIATOS
 
 ### Sessão Atual (Hoje - 26 JAN)
+
 - ✅ Documentação de status criada
 - ⏳ **Ação**: Iniciar 4.5 (Google Analytics 4)
 
 ### Próximas 48h
+
 1. Configurar GA4 ID
 2. Integrar Google Tag Manager
 3. Setup Meta Pixel
 4. Começar estrutura do carrinho (5.1)
 
 ### Esta Semana
+
 - Completar FASE 4 (Analytics/GTM/Events)
 - Início de FASE 5 (Carrinho + Checkout)
 

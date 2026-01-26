@@ -51,14 +51,17 @@ export default function ProtectedRoute({
         checkAuth();
 
         // Monitorar mudanças na autenticação
-        const { data: subscription } = onAuthStateChange((user) => {
+        const { data } = onAuthStateChange((user) => {
             if (!user && requireAuth) {
                 router.push(redirectTo);
             }
         });
 
+        // Unsubscribe cleanup
         return () => {
-            subscription?.unsubscribe();
+            if (data?.subscription && typeof data.subscription.unsubscribe === 'function') {
+                data.subscription.unsubscribe();
+            }
         };
     }, [router, redirectTo, requireAuth]);
 

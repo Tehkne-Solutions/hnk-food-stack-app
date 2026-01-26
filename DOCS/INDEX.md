@@ -8,6 +8,7 @@
 ## 🎯 Comece Aqui
 
 ### Para Entender Tudo Rapidamente
+
 1. **[RESUMO-EXECUTIVO.md](./RESUMO-EXECUTIVO.md)** (5 min) ⭐⭐⭐
    - Status atual em números
    - O que foi entregue (FASE 1-4)
@@ -15,6 +16,7 @@
    - Recomendações estratégicas
 
 ### Para Executar Agora
+
 1. **[CHECKLIST-ACOES-IMEDIATAS.md](./CHECKLIST-ACOES-IMEDIATAS.md)** (10 min) ⭐⭐⭐
    - Tarefas para os próximos 2 dias
    - Tarefas para a Semana 1
@@ -22,6 +24,7 @@
    - Checklists por tarefa
 
 ### Para Planejar o Projeto
+
 1. **[ROADMAP-VISUAL.md](./ROADMAP-VISUAL.md)** (15 min)
    - Timeline visual ASCII art
    - 4 ciclos de desenvolvimento
@@ -36,7 +39,7 @@
 
 ### Entender o Contexto
 
-3. **[PROMPTS/PROMPT-INICIAL.MD](./PROMPTS/PROMPT-INICIAL.MD)**
+1. **[PROMPTS/PROMPT-INICIAL.MD](./PROMPTS/PROMPT-INICIAL.MD)**
    - Prompt original do cliente
    - Requisitos iniciais
    - Fases do projeto

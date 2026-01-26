@@ -13,7 +13,8 @@ Implementação completa de otimizações SEO e performance para o HNK Food Stac
 **Arquivo**: `app/(shop)/[slug]/page.tsx`
 **Linhas**: 85+ (function generateMetadata)
 
-#### Implementação:
+#### Implementação
+
 ```tsx
 export async function generateMetadata({ params }): Promise<Metadata> {
   const store = storeMap[params.slug] || mockStore
@@ -50,7 +51,8 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 }
 ```
 
-#### Features:
+#### Features
+
 - ✅ Dynamic por loja (bem-estar, premium-cuts, etc)
 - ✅ OpenGraph para Facebook/LinkedIn
 - ✅ Twitter Cards com imagens
@@ -59,7 +61,8 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 - ✅ Locale: pt_BR
 - ✅ Site name for social sharing
 
-#### Impacto SEO:
+#### Impacto SEO
+
 - **CTR em buscas**: +35% (melhores titles/descriptions)
 - **Social shares**: +50% (OpenGraph cards bonitas)
 - **Duplicate content**: Eliminado (canonical URLs)
@@ -69,12 +72,14 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 ### ✅ FASE 4.2: Schema.org JSON-LD (Concluído)
 
 **Arquivos**:
+
 - `src/lib/schema-org.ts` (168 linhas)
 - `src/components/seo/SchemaOrg.tsx` (45 linhas)
 
-#### Schemas Implementados:
+#### Schemas Implementados
 
 1. **Organization Schema**
+
 ```json
 {
   "@context": "https://schema.org",
@@ -92,7 +97,8 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 }
 ```
 
-2. **LocalBusiness (Restaurant) Schema**
+1. **LocalBusiness (Restaurant) Schema**
+
 ```json
 {
   "@context": "https://schema.org",
@@ -108,7 +114,8 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 }
 ```
 
-3. **BreadcrumbList Schema**
+1. **BreadcrumbList Schema**
+
 ```json
 {
   "@context": "https://schema.org",
@@ -130,7 +137,8 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 }
 ```
 
-#### Integrações:
+#### Integrações
+
 ```tsx
 // SchemaOrg.tsx renderiza scripts
 <SchemaOrg store={mockStore} />
@@ -139,7 +147,8 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 <SchemaOrg store={mockStore} />
 ```
 
-#### Impacto SEO:
+#### Impacto SEO
+
 - **Rich snippets**: +25% (estrelas, avaliações, breadcrumbs)
 - **Indexação**: +15% (Google entende melhor o conteúdo)
 - **SERP click-through**: +20% (displays mais ricos)
@@ -150,12 +159,14 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 ### ✅ FASE 4.3: Image Optimization (Concluído)
 
 **Arquivos Modificados**:
+
 - `src/components/ui/ProductCard.tsx`
 - `src/components/layout/FeaturedProduct.tsx`
 
-#### Otimizações:
+#### Otimizações
 
 **ProductCard.tsx**:
+
 ```tsx
 <Image
   src={product.image}
@@ -170,6 +181,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 ```
 
 **FeaturedProduct.tsx**:
+
 ```tsx
 <Image
   src={image}
@@ -183,14 +195,16 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 />
 ```
 
-#### Configurações:
+#### Configurações
+
 - Quality: 85% (grid), 90% (hero)
 - Sizes: Responsive breakpoints por componente
 - Blur: SVG placeholder zinc-900
 - Loading: Lazy para grid, Priority para hero
 - Format: JPEG otimizado com Next/Image
 
-#### Impacto Performance:
+#### Impacto Performance
+
 - **LCP**: ⚡ -45% (2.1s → 1.2s)
 - **CLS**: ⚡ -47% (0.15 → 0.08)
 - **Image size**: ⚡ -54% (2.4MB → 1.1MB)
@@ -201,6 +215,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 ### ⏳ FASE 4.4: Audit & Documentation (Próximo)
 
 **Planned**:
+
 - [ ] Gerar relatório Lighthouse completo
 - [ ] Core Web Vitals validation
 - [ ] SEO checklist final
@@ -227,6 +242,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 ## 🎯 Impactos SEO Esperados
 
 ### Antes (FASE 3)
+
 ```
 Google Index: ~85% (erros crawl)
 Organic Traffic: Base
@@ -235,6 +251,7 @@ CTR SERP: ~3.2%
 ```
 
 ### Depois (FASE 4)
+
 ```
 Google Index: ~99.5% (otimizado)
 Organic Traffic: +180% (estimado)
@@ -285,6 +302,7 @@ DOCS/
 ## ✅ Checklist FASE 4 (3/4)
 
 ### FASE 4.1: Meta Tags ✅
+
 - [x] generateMetadata function
 - [x] Title/Description dinâmicos
 - [x] OpenGraph implementado
@@ -294,6 +312,7 @@ DOCS/
 - [x] Zero build errors
 
 ### FASE 4.2: Schema.org ✅
+
 - [x] Organization schema
 - [x] LocalBusiness (Restaurant) schema
 - [x] Breadcrumb schema
@@ -303,6 +322,7 @@ DOCS/
 - [x] Zero build errors
 
 ### FASE 4.3: Image Optimization ✅
+
 - [x] ProductCard quality settings
 - [x] FeaturedProduct optimization
 - [x] Responsive sizes
@@ -312,6 +332,7 @@ DOCS/
 - [x] Zero build errors
 
 ### FASE 4.4: Audit & Docs ⏳
+
 - [ ] Lighthouse report
 - [ ] Core Web Vitals validation
 - [ ] Performance budget
@@ -322,11 +343,13 @@ DOCS/
 ## 🎓 SEO Best Practices Aplicadas
 
 ✅ **On-Page SEO**
+
 - Meta tags dinâmicas por página
 - Títulos únicos e descritivos
 - Descriptions com CTAs
 
 ✅ **Technical SEO**
+
 - Canonical URLs
 - Responsive design
 - Fast loading (Core Web Vitals)
@@ -334,12 +357,14 @@ DOCS/
 - Structured data
 
 ✅ **Content SEO**
+
 - Schema.org microdata
 - Rich snippets
 - OpenGraph tags
 - Voice search optimization
 
 ✅ **Performance SEO**
+
 - Image optimization
 - Lazy loading
 - Blur placeholders
