@@ -5,11 +5,11 @@
  */
 
 import React from 'react'
-import { FireButton } from '@/components/ui/FireButton'
 import { Header } from '@/components/layout/Header'
 import { FeaturedProduct } from '@/components/layout/FeaturedProduct'
 import { ShopContent } from '@/components/layout/ShopContent'
 import { Footer } from '@/components/layout/Footer'
+import { CTAWhatsApp } from '@/components/layout/CTAWhatsApp'
 import { Metadata } from 'next'
 
 // Mock de dados - será substituído por Prisma + Supabase
@@ -146,26 +146,8 @@ export default async function ShopPage() {
                     <p className="text-ember-secondary max-w-xl mx-auto">
                         Peça pelo WhatsApp e receba com a qualidade que você merece
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <FireButton
-                            onClick={() => {
-                                // TODO: integrar UTM link builder
-                                window.open(
-                                    `https://wa.me/${mockStore.whatsapp}?text=Olá,%20gostaria%20de%20fazer%20um%20pedido!`,
-                                    '_blank'
-                                )
-                            }}
-                            size="lg"
-                        >
-                            💬 Abrir WhatsApp
-                        </FireButton>
-                        <FireButton
-                            onClick={() => console.log('Ver menu completo')}
-                            variant="secondary"
-                            size="lg"
-                        >
-                            📋 Menu Completo
-                        </FireButton>
+                    <div className="flex justify-center">
+                        <CTAWhatsApp phone={mockStore.whatsapp} storeName={mockStore.name} />
                     </div>
                 </section>
             </div>
