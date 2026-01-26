@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { TrendingUp, Users, Target, BarChart3 } from 'lucide-react'
 import { ConversionFunnel } from '@/components/admin/ConversionFunnel'
+import { UTMLinkBuilder } from '@/components/admin/UTMLinkBuilder'
 
 interface Campaign {
   id: string
@@ -136,6 +137,18 @@ export default function MarketingPage() {
         </div>
         <div className="p-6">
           <ConversionFunnel data={funnelData} />
+        </div>
+      </motion.div>
+
+      <motion.div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/40 overflow-hidden backdrop-blur-md">
+        <div className="p-6 border-b border-zinc-800">
+          <h2 className="text-xl font-black italic text-white">
+            Construtor de Links <span className="text-amber-500">UTM</span>
+          </h2>
+          <p className="text-sm text-zinc-400 mt-2">Crie links rastreáveis para suas campanhas</p>
+        </div>
+        <div className="p-6">
+          <UTMLinkBuilder />
         </div>
       </motion.div>
 
