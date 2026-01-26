@@ -7,7 +7,7 @@
 
 import { useEffect } from 'react'
 import { useCart } from '@/hooks/use-cart'
-import { useTenant } from '@/providers/tenant-provider'
+import { useTenant } from '@/context/TenantContext'
 import { trackAbandonedCart } from '@/actions/recovery-actions'
 
 export function RecoveryTracker() {

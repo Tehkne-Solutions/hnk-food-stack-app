@@ -13,7 +13,8 @@ import {
     WhatsAppMessage,
 } from '@/types/recovery'
 
-const supabase = createClientInstance()
+const supabaseInstance = createClientInstance()
+const supabase = supabaseInstance!
 
 /**
  * Registrar carrinho abandonado
@@ -29,6 +30,13 @@ export async function trackAbandonedCart(
     cartTotal: number
 ): Promise<{ success: boolean; cartId?: string; error?: string }> {
     try {
+        if (!supabase) {
+            return {
+                success: false,
+                error: 'Supabase não configurado',
+            }
+        }
+
         const { data, error } = await supabase
             .from('abandoned_carts')
             .insert({
@@ -72,15 +80,22 @@ export async function sendRecoveryMessage(
     orgId: string
 ): Promise<{ success: boolean; messageId?: string; error?: string }> {
     try {
+        if (!supabase) {
+            return {
+                success: false,
+                error: 'Supabase não configurado',
+            }
+        }
+
         // Buscar carrinho e config
         const [cartRes, configRes] = await Promise.all([
-            supabase
+            supabase!
                 .from('abandoned_carts')
                 .select('*')
                 .eq('id', cartId)
                 .eq('org_id', orgId)
                 .single(),
-            supabase
+            supabase!
                 .from('recovery_configs')
                 .select('*')
                 .eq('org_id', orgId)
@@ -264,14 +279,14 @@ export async function getRecoveryMetrics(
         if (error) throw error
 
         const totalAbandoned = carts.length
-        const withAttempts = carts.filter((c) => c.recovery_attempts > 0).length
-        const recovered = carts.filter((c) => c.recovery_status === 'recovered').length
-        const clicked = carts.filter((c) => c.recovery_status === 'clicked').length
-        const messageSent = carts.filter((c) => c.recovery_status === 'message_sent').length
+        const withAttempts = carts.filter((c: AbandonedCart) => c.recovery_attempts > 0).length
+        const recovered = carts.filter((c: AbandonedCart) => c.recovery_status === 'recovered').length
+        const clicked = carts.filter((c: AbandonedCart) => c.recovery_status === 'clicked').length
+        const messageSent = carts.filter((c: AbandonedCart) => c.recovery_status === 'message_sent').length
 
         const recoveryRevenue = carts
-            .filter((c) => c.recovery_status === 'recovered')
-            .reduce((sum, c) => sum + c.cart_total, 0)
+            .filter((c: AbandonedCart) => c.recovery_status === 'recovered')
+            .reduce((sum: number, c: AbandonedCart) => sum + c.cart_total, 0)
 
         const averageRecoveryTime = calculateAverageRecoveryTime(carts)
 

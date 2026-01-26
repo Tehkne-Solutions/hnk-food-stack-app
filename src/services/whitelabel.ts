@@ -8,7 +8,7 @@ import { createClientInstance } from '@/lib/supabase'
 import { ThemeConfig, ThemeUpdatePayload } from '@/types/whitelabel'
 import { isValidColor, getThemePresets } from '@/lib/theme-utils'
 
-const supabase = createClientInstance()
+const supabase = createClientInstance()!
 
 const DEFAULT_THEME: ThemeConfig = {
     primary_color: '#d97706',

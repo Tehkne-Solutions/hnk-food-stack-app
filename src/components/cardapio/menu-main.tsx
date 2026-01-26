@@ -2,21 +2,62 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, MapPin, Plus, MessageCircle } from 'lucide-react'
-import { mockProducts, categories } from '@/lib/mock-data'
+import { Search, MapPin, MessageCircle, Loader, AlertTriangle } from 'lucide-react'
+import { createClientComponentClient } from '@supabase/auth-helpers-react'
+import { useTenant } from '@/context/TenantContext'
+import { Product } from '@/types' // Assumindo que você tem um tipo Product
+import { categories } from '@/lib/mock-data' // Categorias ainda mockadas por enquanto
 import { ProductCard } from './product-card'
 import { CategoryScrollBar } from './category-scroll-bar'
+import { CartButton } from '@/components/cart-button'
 import { type ProductCategory } from '@/types'
 
 export function MenuMain() {
+    const { organization } = useTenant()
+    const supabase = createClientComponentClient()
+
+    const [allProducts, setAllProducts] = useState<Product[]>([])
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
     const [selectedCategory, setSelectedCategory] = useState<ProductCategory>('carnes')
     const [searchQuery, setSearchQuery] = useState('')
-    const [filteredProducts, setFilteredProducts] = useState(mockProducts)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+
     const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-    // Filtrar produtos por categoria e busca
+    // Buscar produtos do Supabase quando a organização for identificada
     useEffect(() => {
-        let filtered = mockProducts.filter(
+        const fetchProducts = async () => {
+            if (!organization) {
+                setLoading(false)
+                // Poderia mostrar uma mensagem "Organização não encontrada"
+                return
+            }
+
+            setLoading(true)
+            setError(null)
+
+            const { data, error } = await supabase
+                .from('products')
+                .select('*')
+                .eq('org_id', organization.id)
+
+            if (error) {
+                console.error('Erro ao buscar produtos:', error)
+                setError('Não foi possível carregar os produtos. Tente novamente mais tarde.')
+                setAllProducts([])
+            } else {
+                setAllProducts(data || [])
+            }
+            setLoading(false)
+        }
+
+        fetchProducts()
+    }, [organization, supabase])
+
+    // Filtrar produtos localmente por categoria e busca
+    useEffect(() => {
+        let filtered = allProducts.filter(
             (product) => product.category === selectedCategory
         )
 
@@ -24,27 +65,92 @@ export function MenuMain() {
             filtered = filtered.filter(
                 (product) =>
                     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    product.description.toLowerCase().includes(searchQuery.toLowerCase())
+                    (product.description && product.description.toLowerCase().includes(searchQuery.toLowerCase()))
             )
         }
 
         setFilteredProducts(filtered)
-    }, [selectedCategory, searchQuery])
+    }, [selectedCategory, searchQuery, allProducts])
+    
+    // Renderização de conteúdo principal baseada no estado
+    const renderContent = () => {
+        if (loading) {
+            return (
+                <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                    <Loader className="w-8 h-8 animate-spin mb-4" />
+                    <p>Carregando o cardápio...</p>
+                </div>
+            )
+        }
+
+        if (error) {
+            return (
+                <div className="flex flex-col items-center justify-center py-12 text-amber-500">
+                    <AlertTriangle className="w-8 h-8 mb-4" />
+                    <p>{error}</p>
+                </div>
+            )
+        }
+
+        if (filteredProducts.length > 0) {
+            return (
+                <motion.div
+                    key={selectedCategory}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-3"
+                >
+                    {filteredProducts.map((product, index) => (
+                        <motion.div
+                            key={product.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                delay: index * 0.05,
+                                duration: 0.3,
+                                ease: 'easeOut',
+                            }}
+                            viewport={{ once: true }}
+                        >
+                            <ProductCard product={product} />
+                        </motion.div>
+                    ))}
+                </motion.div>
+            )
+        }
+        
+        return (
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex flex-col items-center justify-center py-12"
+            >
+                <div className="text-4xl mb-4">🔍</div>
+                <p className="text-gray-400 text-center">
+                    Nenhum produto encontrado para esta categoria ou busca.
+                </p>
+            </motion.div>
+        )
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] via-[#0f0f0f] to-[#0a0a0a]">
             {/* Header Fixo */}
             <header className="sticky top-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-[#d97706]/20 py-4 px-4">
                 <div className="max-w-4xl mx-auto">
-                    {/* Localização e Nome */}
+                    {/* Localização e Carrinho */}
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex items-center gap-2 mb-4"
+                        className="flex items-center justify-between gap-2 mb-4"
                     >
-                        <MapPin className="w-4 h-4 text-[#d97706]" />
-                        <span className="text-sm text-gray-400">Entrega em</span>
-                        <span className="text-sm font-semibold text-white">São Paulo, SP</span>
+                        <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-[#d97706]" />
+                            <span className="text-sm text-gray-400">Cardápio de</span>
+                            <span className="text-sm font-semibold text-white">{organization?.name || 'HNK Food'}</span>
+                        </div>
+                        <CartButton />
                     </motion.div>
 
                     {/* Barra de Busca */}
@@ -100,42 +206,7 @@ export function MenuMain() {
 
                 {/* Grid de Produtos com Animação */}
                 <AnimatePresence mode="wait">
-                    {filteredProducts.length > 0 ? (
-                        <motion.div
-                            key={selectedCategory}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="space-y-3"
-                        >
-                            {filteredProducts.map((product, index) => (
-                                <motion.div
-                                    key={product.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{
-                                        delay: index * 0.05,
-                                        duration: 0.3,
-                                        ease: 'easeOut',
-                                    }}
-                                    viewport={{ once: true }}
-                                >
-                                    <ProductCard product={product} />
-                                </motion.div>
-                            ))}
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="flex flex-col items-center justify-center py-12"
-                        >
-                            <div className="text-4xl mb-4">🔍</div>
-                            <p className="text-gray-400 text-center">
-                                Nenhum produto encontrado para "{searchQuery}"
-                            </p>
-                        </motion.div>
-                    )}
+                    {renderContent()}
                 </AnimatePresence>
             </main>
 

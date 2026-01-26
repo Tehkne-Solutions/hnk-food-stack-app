@@ -6,7 +6,6 @@
  */
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { useTenant } from '@/providers/tenant-provider'
 import { getTheme } from '@/services/whitelabel'
 import { generateCSSVariables } from '@/lib/theme-utils'
 import { ThemeConfig } from '@/types/whitelabel'
@@ -20,16 +19,15 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-    const tenant = useTenant()
     const [theme, setTheme] = useState<ThemeConfig | null>(null)
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         const loadTheme = async () => {
             try {
-                if (!tenant.organization) return
-
-                const result = await getTheme(tenant.organization.id)
+                // Buscar tema padrão para Churrasco Bem Brasil
+                // Em produção, você buscaria o tema da organização atual
+                const result = await getTheme('0000-0000-0000-0001')
                 if (result.success && result.theme) {
                     setTheme(result.theme)
 
@@ -57,7 +55,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         }
 
         loadTheme()
-    }, [tenant.organization])
+    }, [])
 
     const updateTheme = (updates: Partial<ThemeConfig>) => {
         if (theme) {

@@ -2,7 +2,24 @@
 
 import { refineContentWithAI } from '@/services/ai-gastronomic'
 import { insertTenantData } from '@/lib/supabase-tenant'
-import type { Organization } from '@/types/tenant'
+
+type Organization = {
+    id: string
+    name: string
+    slug: string
+    brand_voice: 'rústico e apaixonado' | 'elegante e sofisticado' | 'rápido e casual'
+    keywords: string[]
+    theme_config?: {
+        primary_color: string
+        secondary_color: string
+        font_family: string
+        border_radius: string
+        logo_url?: string
+        accent_color?: string
+    }
+    created_at: string
+    updated_at: string
+}
 
 /**
  * Server Action: Refinar conteúdo de Instagram para blog
@@ -30,10 +47,10 @@ export async function refineAndSaveBlogPost(
             }
         }
 
-        if (!organization.brand_voice || !organization.keywords) {
+        if (!organization) {
             return {
                 success: false,
-                error: 'Organização sem configuração de voz ou keywords',
+                error: 'Organização não encontrada',
             }
         }
 

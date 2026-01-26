@@ -13,7 +13,7 @@ import {
     RecoveryMetricsDetail,
 } from '@/types/dashboard'
 
-const supabase = createClientInstance()
+const supabase = createClientInstance()!
 
 /**
  * Obter métricas completas do dashboard

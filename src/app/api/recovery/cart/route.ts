@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClientInstance } from '@/lib/supabase'
 
-const supabase = createClientInstance()
+const supabase = createClientInstance()!
 
 export async function GET(request: NextRequest) {
     try {
