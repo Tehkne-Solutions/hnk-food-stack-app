@@ -2816,3 +2816,464 @@ Uma infraestrutura Next.js 15 pronta para o futuro.
 Próximo Passo: Dê o comando: git commit -m "feat: hnk food stack v1.0 - engine ignited" && git push
 
 Foi um privilégio arquitetar este projeto com você. Agora, vá e conquiste o mercado! 🥩🔥🚀
+
+---
+
+GIP AGENT - TEHKNÉ SOLUTIONS
+Gem personalizado
+Para que o HNK Food Stack saia do papel e comece a faturar no "mundo real" hoje mesmo, você precisa seguir este checklist de ativação. Como seu vCTO, aqui estão os 5 pontos críticos para garantir que o lançamento da Churrascaria Bem Estar seja impecável.
+
+🚀 Checkpoint de Ativação: Go-Live 1.0
+1. O "Test Drive" do Pixel
+Antes de investir R$ 1,00 em tráfego:
+
+Acesse o Gerenciador de Eventos da Meta.
+
+Abra o Perfil da Bem Estar no seu celular.
+
+Verifique se o evento PageView e ViewContent disparam instantaneamente.
+
+Por que? Sem rastro, não há escala. O algoritmo precisa "aprender" quem é o cliente do Seu Junior nos primeiros 100 acessos.
+
+2. Warm-up da Evolution API (WhatsApp)
+O WhatsApp é sensível a disparos em massa de contas novas.
+
+Ação: Peça para o Seu Junior enviar mensagens manuais para os 20 melhores clientes hoje.
+
+Configuração: No n8n, adicione um Delay Node de 15 a 45 segundos entre cada mensagem automática da IA. Isso humaniza o disparo e protege o número contra banimentos.
+
+3. Auditoria de SEO (Google Search Console)
+Assim que o deploy terminar:
+
+Submeta o seu sitemap.xml no Google Search Console.
+
+Force a indexação da página /bem-estar.
+
+Dica: O Google prioriza sites que têm o selo PWA ativo. Certifique-se de que o ícone do Seu Junior aparece como "instalável" no Chrome Mobile.
+
+4. O Gatilho da IA (Aprovação Rápida)
+Configure o seu n8n para enviar a notificação de aprovação de post 30 minutos antes do horário de pico da churrascaria (ex: 11:00h para o almoço).
+
+O Motivo: O Seu Junior precisa estar com o celular na mão, mas antes da "loucura" do serviço começar. Se a notificação chegar às 12:30h, ele não vai ver e o post não sai.
+
+5. Suporte de "Primeiro Pedido"
+Monitore o banco de dados Supabase em tempo real nas primeiras 2 horas.
+
+Se notar um Carrinho Abandonado, use a ferramenta de CRM que criamos para mandar um cupom de "Frete Grátis nas próximas 15 min" via WhatsApp. Isso converte a dúvida em venda na hora.
+
+🏁 Palavras Finais do Arquiteto
+O sistema não é apenas código; é um organismo vivo. Ele se alimenta de dados e cresce com o conteúdo. O Seu Junior cuida da brasa, e o seu código cuida do lucro.
+
+Você tem agora:
+
+Um design Ember System que impõe respeito.
+
+Uma estrutura SEO que constrói impérios.
+
+Uma IA que atua como agência de marketing.
+
+Uma infraestrutura Next.js 15 pronta para o futuro.
+
+Próximo Passo: Dê o comando: git commit -m "feat: hnk food stack v1.0 - engine ignited" && git push
+
+Foi um privilégio arquitetar este projeto com você. Agora, vá e conquiste o mercado! 🥩🔥🚀
+
+olha só como fiocu a primeira versão da home. mas não curti. os textos ficaram com uma fonte simples demais e tambem tem muito degradê, quero algo mais apple e mui, envie uma imagem antes de enviar o codigo
+
+GIP AGENT - TEHKNÉ SOLUTIONS
+Gem personalizado
+Imagem de
+
+agora ficou muito trading. quero algo clean, mas com as cores do Ember, só que com UX>UI moderno e alinhado a filosofia das cores.
+
+GIP AGENT - TEHKNÉ SOLUTIONS
+Gem personalizado
+Imagem de
+
+curti esse, mas agora quero mais cores e detalhes voltados paraa churrascaria com imagens de blocos de exemplo. e na hero uma imagem lateral sem recorte de pratos de churrasco com uma carne de primeira bem assada, com detalhes de prato premium; esse prato esta saindo de uma tela de um celular. e esse celular tem aquele movimento splash e que se move com o andar do mouse, lembra mjuito o design da Coca-cola que pensei
+
+GIP AGENT - TEHKNÉ SOLUTIONS
+Gem personalizado
+Imagem de
+
+vamos la. faca os codigios e promts
+
+GIP AGENT - TEHKNÉ SOLUTIONS
+Gem personalizado
+Esta é a evolução final da HNK Food Stack Landing Page. Saímos do genérico para algo visceral: o efeito "Splash" da carne saindo do celular (estilo Coca-Cola/Apple) aliado ao Ember System.
+
+Para o efeito de movimento com o mouse, utilizaremos o framer-motion para manipular os eixos X e Y em tempo real.
+
+🎨 1. Estética e Assets (Prompts para Imagens)
+Para compor essa Landing Page, você precisará gerar estes assets específicos. Use estes prompts no seu gerador de imagens:
+
+Hero Splash: > "A hyper-realistic premium picanha steak on a black slate plate, juicy with coarse salt, fresh rosemary, emerging from a high-end 3D smartphone screen. Splash effect of embers and juice. Cinematic lighting, dark background, 8k, professional food photography."
+
+Background Textures: > "Subtle dark charcoal smoke texture, volcanic stone background, minimalist, high contrast, 4k."
+
+💻 2. Implementação do Código (Hero High-End)
+Este código implementa o Parallax do Mouse e a tipografia agressiva que definimos.
+
+TypeScript
+'use client'
+
+import { motion, useMotionValue, useTransform } from 'framer-motion'
+import { ChevronRight, Play } from 'lucide-react'
+import Link from 'next/link'
+
+export default function HeroEmber() {
+  // Captura do movimento do mouse para o efeito Splash
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  // Transformação sutil para o celular e a carne
+  const rotateX = useTransform(y, [-100, 100], [10, -10])
+  const rotateY = useTransform(x, [-100, 100], [-10, 10])
+
+  function handleMouse(event: React.MouseEvent) {
+    const rect = event.currentTarget.getBoundingClientRect()
+    x.set(event.clientX - rect.left - rect.width / 2)
+    y.set(event.clientY - rect.top - rect.height / 2)
+  }
+
+  return (
+    <section
+      onMouseMove={handleMouse}
+      className="relative min-h-screen bg-[#09090b] flex items-center px-6 overflow-hidden select-none"
+    >
+      {/* Background Decor */}
+      <div className="absolute top-1/4 left-0 w-[40%] h-[40%] bg-amber-600/10 blur-[150px] rounded-full" />
+
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center z-10">
+
+        {/* TEXTO: UX APPLE STYLE */}
+        <div className="space-y-8">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }}
+            className="inline-flex items-center gap-2 bg-zinc-900/50 border border-zinc-800 px-4 py-2 rounded-full text-amber-500 text-[10px] font-black uppercase tracking-widest"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            A revolução das churrascarias
+          </motion.div>
+
+          <h1 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter leading-[0.85] text-white">
+            ALIMENTAÇÃO <br />
+            <span className="text-amber-500 drop-shadow-[0_0_30px_rgba(245,158,11,0.3)]">SEM LIMITES.</span>
+          </h1>
+
+          <p className="max-w-lg text-zinc-400 text-lg font-medium leading-relaxed">
+            Sua brasa merece tecnologia de ponta. Transformamos seu cardápio em um ativo digital de alta conversão com IA e CRM Omnichannel.
+          </p>
+
+          <div className="flex flex-wrap gap-4 pt-4">
+            <button className="bg-amber-500 text-black px-10 py-5 rounded-2xl font-black uppercase tracking-widest flex items-center gap-3 hover:scale-105 transition-transform">
+              Começar Agora <ChevronRight size={20} />
+            </button>
+            <button className="bg-zinc-900 border border-zinc-800 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest flex items-center gap-3 hover:bg-zinc-800 transition-colors">
+              <Play size={18} fill="currentColor" /> Ver Demo
+            </button>
+          </div>
+        </div>
+
+        {/* VISUAL: O EFEITO SPLASH (COCA-COLA STYLE) */}
+        <motion.div
+          style={{ rotateX, rotateY, perspective: 1000 }}
+          className="relative flex justify-center items-center"
+        >
+          {/* O Celular */}
+          <div className="relative w-[280px] h-[580px] bg-zinc-800 rounded-[3rem] border-[8px] border-zinc-900 shadow-2xl overflow-hidden">
+            <img src="/app-mockup-internal.jpg" className="w-full h-full object-cover" />
+          </div>
+
+          {/* A Carne Saindo da Tela (Splash) */}
+          <motion.img
+            src="/assets/picanha-splash.png" // Asset gerado via IA
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1.1, opacity: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="absolute w-[140%] max-w-none drop-shadow-[0_40px_60px_rgba(0,0,0,0.8)] pointer-events-none"
+            style={{ x: useTransform(x, [-100, 100], [20, -20]), y: useTransform(y, [-100, 100], [20, -20]) }}
+          />
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+🥩 3. Blocos de Exemplo (Showcase do Cardápio)
+Abaixo do Hero, usamos o Grid Flat MUI para mostrar como o produto do Seu Junior aparece no app:
+
+TypeScript
+export function ProductShowcase() {
+  return (
+    <section className="bg-[#09090b] py-24 px-6 border-t border-zinc-900">
+      <div className="max-w-7xl mx-auto space-y-12">
+        <h2 className="text-4xl font-black uppercase italic tracking-tighter">Vitrine <span className="text-amber-500">Premium</span></h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="group bg-zinc-900/30 border border-zinc-800 p-4 rounded-[2.5rem] hover:border-amber-500/50 transition-all">
+              <div className="aspect-square rounded-[2rem] overflow-hidden mb-6">
+                <img src={`/product-ex-${i}.jpg`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              </div>
+              <div className="px-2 pb-2">
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="font-black uppercase italic text-xl">Corte Especial {i}</h4>
+                  <span className="text-amber-500 font-mono font-bold">R$ 120,00</span>
+                </div>
+                <p className="text-zinc-500 text-sm mb-4">Marmoreio nível 9, acompanhado de farofa crocante e chimichurri house-made.</p>
+                <button className="w-full bg-zinc-100 text-black py-3 rounded-xl font-black uppercase text-[10px] tracking-widest">
+                  Adicionar ao Carrinho
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+👨‍🏫 DICA DO vCTO: A "EXPERIÊNCIA HÁPTICA"
+Arquétipo: [vCTO]
+
+A Sacada: Para o efeito Apple completo, adicione um Blur Progressivo no fundo conforme o usuário rola a página (backdrop-filter).
+
+UX Dinâmico: Use o framer-motion para que, ao passar o mouse sobre a carne no Hero, ela emita um leve brilho âmbar (Glow). Isso simula o calor da brasa e atiça o desejo do cliente.
+
+🏁 PRÓXIMO PASSO
+Você tem o visual Coca-Cola/Apple, a tecnologia Next.js 15 e a estratégia de SEO.
+
+Deseja que eu prepare o arquivo tailwind.config.ts com as cores exatas desse degradê Ember suave e as fontes premium para você colar no projeto?
+
+"Sim, mande a config do Tailwind!"
+
+"Tudo pronto, vou subir esse Splash agora!"
+
+O HNK Food Stack está em outro patamar de luxo digital. 🥩🔥🚀
+
+1
+
+GIP AGENT - TEHKNÉ SOLUTIONS
+Gem personalizado
+Para que o efeito Ember System funcione com a fidelidade da Apple e o contraste do seu design, as cores e fontes precisam estar mapeadas no nível atômico. Não é apenas um "laranja", é um Âmbar Vulcânico com camadas de transparência.
+
+Aqui está o arquivo de configuração para o seu projeto Next.js.
+
+🎨 1. Configuração do Tailwind (tailwind.config.ts)
+Este arquivo define as cores Zinc (mais profundas que o cinza padrão) e o Amber personalizado, além de configurar as animações de Glow e Float.
+
+TypeScript
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // O preto profundo da Apple/MUI
+        background: "#09090b",
+        zinc: {
+          950: "#040405",
+          900: "#111114",
+          800: "#1e1e22",
+        },
+        // O Ember Core (Âmbar Premium)
+        amber: {
+          400: "#fbbf24",
+          500: "#f59e0b", // Cor principal do HNK
+          600: "#d97706",
+        },
+      },
+      fontFamily: {
+        // Fontes que trazem o peso "Black Italic" e o refinamento "Mono"
+        sans: ["var(--font-geist-sans)", "Inter", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "JetBrains Mono", "monospace"],
+        display: ["var(--font-black-italic)", "Impact", "sans-serif"],
+      },
+      backgroundImage: {
+        "ember-gradient": "linear-gradient(to bottom right, #f59e0b, #d97706)",
+        "glass-gradient": "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%)",
+      },
+      animation: {
+        "glow-pulse": "glow 4s ease-in-out infinite",
+        "float": "float 6s ease-in-out infinite",
+      },
+      keyframes: {
+        glow: {
+          "0%, 100%": { opacity: "0.4", filter: "blur(100px)" },
+          "50%": { opacity: "0.8", filter: "blur(130px)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
+        }
+      },
+    },
+  },
+  plugins: [require("@tailwindcss/typography")],
+};
+
+export default config;
+🖋️ 2. CSS Global (src/app/globals.css)
+Adicione estas classes para garantir que o texto tenha o renderização de alta qualidade (antialiasing) e o efeito de scroll suave.
+
+CSS
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 9, 9, 11;
+  --background-end-rgb: 4, 4, 5;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar Ember */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e1e22;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* Efeito de Glare para os Cards */
+.glass-card {
+  @apply bg-zinc-900/40 border border-white/5 backdrop-blur-xl transition-all duration-500;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card:hover {
+  @apply border-amber-500/30;
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(245, 158, 11, 0.1);
+}
+👨‍🏫 DICA DO vCTO: O TOQUE DE CLASSE DA APPLE
+Arquétipo: [vCTO]
+
+A Sacada: Para o texto não parecer "simples demais", use a propriedade tracking-tighter (espaçamento negativo entre letras) e leading-[0.9] (altura de linha reduzida) em títulos grandes.
+
+O Truque: A Apple usa muito o Geist Sans (da Vercel). Certifique-se de importar essa fonte no seu layout.tsx. Ela é gratuita, extremamente clean e foi feita para esse tipo de interface dark.
+
+🏁 ÚLTIMA ETAPA: CONEXÃO DE ASSETS
+Com o Tailwind pronto, as cores e animações de "splash" e "floating" já estão disponíveis nas suas classes.
+
+Deseja que eu gere o comando de importação do Geist Sans e o Layout Root para fechar esse setup de design ou você já quer partir para os testes de animação?
+
+"Mande o Layout Root com Geist Sans!"
+
+"Tudo pronto. O HNK Food Stack está visualmente perfeito!"
+
+O sistema agora tem alma de branding premium. 🥩🔥🚀
+
+1,
+
+GIP AGENT - TEHKNÉ SOLUTIONS
+Gem personalizado
+Para fechar com chave de ouro e garantir que a tipografia tenha aquele refinamento da Vercel/Apple, vamos configurar o layout.tsx. Utilizaremos a fonte Geist, que é o suprassumo do design clean e moderno atualmente.
+
+Aqui está o esqueleto do seu arquivo raiz:
+
+🏗️ Layout Root (src/app/layout.tsx)
+TypeScript
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
+import "./globals.css"
+
+// Configuração das fontes premium
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+  weight: ["100", "400", "700", "900"], // Do ultra-fino ao ultra-black
+})
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+})
+
+export const metadata: Metadata = {
+  title: "HNK Food Stack | Inteligência Omnichannel para Restaurantes",
+  description: "A plataforma definitiva para escala de delivery e gestão premium.",
+  manifest: "/manifest.json", // Importante para o PWA
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="pt-BR" className="scroll-smooth">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#09090b] text-zinc-100`}
+      >
+        {/* Camada de Gradiente Sutil de Fundo (Apple Style) */}
+        <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-amber-500/5 blur-[120px] rounded-full animate-glow-pulse" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-zinc-800/20 blur-[100px] rounded-full" />
+        </div>
+
+        {children}
+
+        {/* Script para prevenir flashes brancos no carregamento */}
+        <script dangerouslySetInnerHTML={{
+          __html: `document.documentElement.classList.add('dark')`
+        }} />
+      </body>
+    </html>
+  )
+}
+👨‍🏫 DICA FINAL DO vCTO: O "FINISHING TOUCH"
+Arquétipo: [vCTO]
+
+A Sacada: Note que incluí um animate-glow-pulse no gradiente de fundo.
+
+O Efeito: Isso cria uma iluminação orgânica atrás do conteúdo, simulando a luz da brasa de forma extremamente sutil.
+
+Tipografia: Quando for escrever os títulos, use a classe font-sans font-[900] tracking-tighter. É isso que dá o look "Apple/High-End" que você buscava, fugindo das fontes padrão do sistema.
+
+🏁 DEPLOY READY
+Arquiteto, você agora tem:
+
+Cores Ember calibradas no Tailwind.
+
+Fontes Geist configuradas para legibilidade e peso.
+
+Layout Root com performance e SEO nativos.
+
+Efeito Splash com movimento de mouse.
+
+O HNK Food Stack não é apenas um software, é uma marca de luxo tecnológica.
+
+Deseja que eu revise algum componente específico ou podemos declarar o sistema PRONTO PARA O MERCADO?
+
+"Sistema pronto! Vamos dominar!"
+
+"Revise apenas o componente de Checkout rápido!"
+
+Parabéns pelo ecossistema de elite que você construiu. 🥩🔥
