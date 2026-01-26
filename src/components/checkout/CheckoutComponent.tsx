@@ -56,6 +56,43 @@ export function CheckoutComponent() {
         zipCode: '',
     })
     const [paymentMethod, setPaymentMethod] = useState<'card' | 'pix'>('card')
+    const [isProcessing, setIsProcessing] = useState(false)
+
+    // Processar pagamento e enviar notificação WhatsApp
+    const handleFinalizeOrder = async () => {
+        if (!selectedShipping) return
+
+        setIsProcessing(true)
+        try {
+            // Simular processamento de pagamento
+            const orderId = `ORD-${Date.now()}`
+
+            // Aqui você faria a chamada real à API de pagamento
+            // const paymentResult = await fetch('/api/payments/stripe', { ... })
+
+            // Após pagamento bem-sucedido, enviar notificação WhatsApp
+            // await fetch('/api/notifications/whatsapp', {
+            //   method: 'POST',
+            //   headers: { 'Content-Type': 'application/json' },
+            //   body: JSON.stringify({
+            //     type: 'order_confirmed',
+            //     phone: '11999999999', // Obter do checkout
+            //     orderId,
+            //     customerName: 'Cliente',
+            //     total: totalValue,
+            //     estimatedDelivery: '45 minutos'
+            //   })
+            // })
+
+            // Redirecionar para página de confirmação
+            window.location.href = `/confirmation?orderId=${orderId}`
+        } catch (error) {
+            console.error('Payment error:', error)
+            alert('Erro ao processar pagamento')
+        } finally {
+            setIsProcessing(false)
+        }
+    }
 
     // Validar endereço
     const isAddressValid = () => {
@@ -360,9 +397,20 @@ export function CheckoutComponent() {
                             <motion.button
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="w-full py-4 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold hover:shadow-lg hover:shadow-emerald-500/20 transition-all"
+                                onClick={handleFinalizeOrder}
+                                disabled={isProcessing}
+                                className="w-full py-4 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold hover:shadow-lg hover:shadow-emerald-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
-                                Finalizar Pedido - R$ {totalValue.toFixed(2)}
+                                {isProcessing ? (
+                                    <>
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        Processando...
+                                    </>
+                                ) : (
+                                    <>
+                                        Finalizar Pedido - R$ {totalValue.toFixed(2)}
+                                    </>
+                                )}
                             </motion.button>
                         </motion.div>
                     )}
