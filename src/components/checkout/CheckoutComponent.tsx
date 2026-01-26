@@ -115,8 +115,8 @@ export function CheckoutComponent() {
                             <React.Fragment key={s}>
                                 <motion.div
                                     className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm transition-colors ${step === s || arr.indexOf(step) > i
-                                            ? 'bg-ember-accent text-white'
-                                            : 'bg-zinc-800 text-zinc-500'
+                                        ? 'bg-ember-accent text-white'
+                                        : 'bg-zinc-800 text-zinc-500'
                                         }`}
                                 >
                                     {i + 1}
@@ -242,8 +242,8 @@ export function CheckoutComponent() {
                                 onClick={handleBeginCheckout}
                                 disabled={!isAddressValid()}
                                 className={`w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all ${isAddressValid()
-                                        ? 'bg-gradient-to-r from-ember-accent to-amber-600 text-white hover:shadow-lg hover:shadow-amber-500/20'
-                                        : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                                    ? 'bg-gradient-to-r from-ember-accent to-amber-600 text-white hover:shadow-lg hover:shadow-amber-500/20'
+                                    : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                                     }`}
                             >
                                 Continuar
@@ -272,8 +272,8 @@ export function CheckoutComponent() {
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => setSelectedShipping(option)}
                                         className={`w-full p-4 rounded-lg border-2 transition-colors text-left ${selectedShipping?.id === option.id
-                                                ? 'border-ember-accent bg-ember-accent/10'
-                                                : 'border-zinc-800/50 bg-zinc-900/40 hover:border-zinc-700'
+                                            ? 'border-ember-accent bg-ember-accent/10'
+                                            : 'border-zinc-800/50 bg-zinc-900/40 hover:border-zinc-700'
                                             }`}
                                     >
                                         <div className="flex justify-between items-start">
@@ -297,8 +297,8 @@ export function CheckoutComponent() {
                                 onClick={() => setStep('payment')}
                                 disabled={!selectedShipping}
                                 className={`w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all ${selectedShipping
-                                        ? 'bg-gradient-to-r from-ember-accent to-amber-600 text-white hover:shadow-lg hover:shadow-amber-500/20'
-                                        : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                                    ? 'bg-gradient-to-r from-ember-accent to-amber-600 text-white hover:shadow-lg hover:shadow-amber-500/20'
+                                    : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                                     }`}
                             >
                                 Continuar
@@ -326,8 +326,8 @@ export function CheckoutComponent() {
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => setPaymentMethod('card')}
                                     className={`w-full p-4 rounded-lg border-2 transition-colors text-left ${paymentMethod === 'card'
-                                            ? 'border-ember-accent bg-ember-accent/10'
-                                            : 'border-zinc-800/50 bg-zinc-900/40 hover:border-zinc-700'
+                                        ? 'border-ember-accent bg-ember-accent/10'
+                                        : 'border-zinc-800/50 bg-zinc-900/40 hover:border-zinc-700'
                                         }`}
                                 >
                                     <p className="font-bold text-white">Cartão de Crédito</p>
@@ -340,8 +340,8 @@ export function CheckoutComponent() {
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => setPaymentMethod('pix')}
                                     className={`w-full p-4 rounded-lg border-2 transition-colors text-left ${paymentMethod === 'pix'
-                                            ? 'border-emerald-500 bg-emerald-500/10'
-                                            : 'border-zinc-800/50 bg-zinc-900/40 hover:border-zinc-700'
+                                        ? 'border-emerald-500 bg-emerald-500/10'
+                                        : 'border-zinc-800/50 bg-zinc-900/40 hover:border-zinc-700'
                                         }`}
                                 >
                                     <p className="font-bold text-white">PIX</p>
