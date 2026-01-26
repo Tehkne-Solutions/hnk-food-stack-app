@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Edit2, Trash2, Plus, AlertCircle } from 'lucide-react'
+import { Edit2, Plus, AlertCircle, Zap } from 'lucide-react'
+import { PriceModal } from '@/components/admin/PriceModal'
+import { PromotionModal } from '@/components/admin/PromotionModal'
 
 interface Product {
     id: string
@@ -11,6 +13,8 @@ interface Product {
     stock: number
     is_available: boolean
     category: string
+    is_promo?: boolean
+    promo_price?: number
 }
 
 const mockProducts: Product[] = [
@@ -20,7 +24,9 @@ const mockProducts: Product[] = [
         price: 189.90,
         stock: 5,
         is_available: true,
-        category: 'Especiais'
+        category: 'Especiais',
+        is_promo: true,
+        promo_price: 159.90
     },
     {
         id: '2',
@@ -42,8 +48,35 @@ const mockProducts: Product[] = [
 
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>(mockProducts)
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+    const [priceModalOpen, setPriceModalOpen] = useState(false)
+    const [promoModalOpen, setPromoModalOpen] = useState(false)
 
     const lowStockItems = products.filter(p => p.stock <= 2)
+
+    const handleSavePrice = (newPrice: number, promoPrice?: number) => {
+        if (selectedProduct) {
+            setProducts(
+                products.map(p =>
+                    p.id === selectedProduct.id
+                        ? { ...p, price: newPrice, promo_price: promoPrice, is_promo: !!promoPrice }
+                        : p
+                )
+            )
+        }
+    }
+
+    const handleSavePromotion = (promoPrice: number) => {
+        if (selectedProduct) {
+            setProducts(
+                products.map(p =>
+                    p.id === selectedProduct.id
+                        ? { ...p, is_promo: true, promo_price: promoPrice }
+                        : p
+                )
+            )
+        }
+    }
 
     return (
         <div className="space-y-8">
@@ -68,7 +101,7 @@ export default function ProductsPage() {
                         <AlertCircle size={20} className="text-amber-500 mt-0.5" />
                         <div>
                             <p className="font-bold text-amber-500">Aviso de Estoque</p>
-                            <p className="text-sm text-zinc-300">{lowStockItems.length} produto(s) com estoque baixo</p>
+                            <p className="text-sm text-zinc-300">{lowStockItems.length} produto com estoque baixo</p>
                         </div>
                     </div>
                 </motion.div>
@@ -90,10 +123,28 @@ export default function ProductsPage() {
                         <tbody>
                             {products.map((product) => (
                                 <tr key={product.id} className="border-b border-zinc-800 hover:bg-zinc-900/50 transition-colors">
-                                    <td className="px-6 py-4 font-semibold text-white">{product.name}</td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2">
+                                            {product.is_promo && (
+                                                <span className="flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500 text-xs font-bold text-black">
+                                                    <Zap size={12} />
+                                                </span>
+                                            )}
+                                            <span className="font-semibold text-white">{product.name}</span>
+                                        </div>
+                                    </td>
                                     <td className="px-6 py-4 text-zinc-400">{product.category}</td>
-                                    <td className="px-6 py-4 font-mono font-bold text-amber-500">
-                                        R$ {product.price.toFixed(2)}
+                                    <td className="px-6 py-4">
+                                        <div className="space-y-1">
+                                            <div className="font-mono font-bold text-white">
+                                                R$ {product.price.toFixed(2)}
+                                            </div>
+                                            {product.is_promo && product.promo_price && (
+                                                <div className="font-mono font-bold text-emerald-400 text-sm">
+                                                    R$ {product.promo_price.toFixed(2)}
+                                                </div>
+                                            )}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={product.stock <= 2 ? 'text-red-400 font-bold' : 'text-white'}>
@@ -109,11 +160,25 @@ export default function ProductsPage() {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 flex gap-2">
-                                        <button className="text-amber-500 hover:text-amber-400">
+                                        <button
+                                            onClick={() => {
+                                                setSelectedProduct(product)
+                                                setPriceModalOpen(true)
+                                            }}
+                                            className="text-amber-500 hover:text-amber-400"
+                                            title="Editar preco"
+                                        >
                                             <Edit2 size={18} />
                                         </button>
-                                        <button className="text-red-500 hover:text-red-400">
-                                            <Trash2 size={18} />
+                                        <button
+                                            onClick={() => {
+                                                setSelectedProduct(product)
+                                                setPromoModalOpen(true)
+                                            }}
+                                            className="text-emerald-500 hover:text-emerald-400"
+                                            title="Criar promocao"
+                                        >
+                                            <Zap size={18} />
                                         </button>
                                     </td>
                                 </tr>
@@ -122,6 +187,22 @@ export default function ProductsPage() {
                     </table>
                 </div>
             </motion.div>
+
+            {priceModalOpen && selectedProduct && (
+                <PriceModal
+                    product={selectedProduct}
+                    onClose={() => setPriceModalOpen(false)}
+                    onSave={handleSavePrice}
+                />
+            )}
+
+            {promoModalOpen && selectedProduct && (
+                <PromotionModal
+                    product={selectedProduct}
+                    onClose={() => setPromoModalOpen(false)}
+                    onSave={(promoPrice) => handleSavePromotion(promoPrice)}
+                />
+            )}
         </div>
     )
 }
