@@ -6,9 +6,11 @@
 
 import React from 'react'
 import { SectionTitle } from '@/components/ui/SectionTitle'
-import { ProductCard } from '@/components/ui/ProductCard'
 import { FireButton } from '@/components/ui/FireButton'
-import Image from 'next/image'
+import { Header } from '@/components/layout/Header'
+import { FeaturedProduct } from '@/components/layout/FeaturedProduct'
+import { ProductGrid } from '@/components/layout/ProductGrid'
+import { Footer } from '@/components/layout/Footer'
 import { Metadata } from 'next'
 
 // Mock de dados - será substituído por Prisma + Supabase
@@ -84,105 +86,96 @@ export async function generateMetadata({
     }
 }
 
-export default async function ShopPage({
-    params,
-}: {
-    params: { slug: string }
-}) {
+export default async function ShopPage() {
     // TODO: validar slug + buscar store do Supabase via Prisma
 
     return (
-        <div className="space-y-16">
-            {/* Hero Section */}
-            <section className="space-y-4">
-                <div className="relative h-80 w-full overflow-hidden rounded-3xl bg-gradient-to-br from-zinc-800 via-zinc-900 to-ember-dark border border-zinc-800/50">
-                    {/* Background image (seria da loja) */}
-                    <div className="absolute inset-0 opacity-30">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-ember-accent/10 rounded-full blur-3xl" />
-                    </div>
+        <>
+            {/* Header Sticky */}
+            <Header storeName={mockStore.name} logoUrl={mockStore.logo} />
 
-                    {/* Content overlay */}
-                    <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
-                        <h1 className="text-4xl md:text-5xl font-black italic text-white mb-4">
-                            {mockStore.name}
-                        </h1>
-                        <p className="text-ember-secondary text-lg max-w-2xl">
-                            {mockStore.description}
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* Featured Products Section */}
-            <section className="space-y-6">
-                <SectionTitle
-                    title="Destaques do Mestre"
-                    subtitle="Aqueles cortes que não podem faltar"
-                />
-                <div className="grid md:grid-cols-2 gap-6">
-                    {mockProducts.slice(0, 2).map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            onAddToCart={(p) => {
-                                // TODO: integrar com Zustand cart store
-                                console.log('Adicionar:', p.name)
-                            }}
-                        />
-                    ))}
-                </div>
-            </section>
-
-            {/* All Products Grid */}
-            <section className="space-y-6">
-                <SectionTitle
-                    title="Todos os Cortes"
-                    subtitle="Escolha o seu favorito"
-                />
-                <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {mockProducts.map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            onAddToCart={(p) => {
-                                // TODO: integrar com Zustand cart store
-                                console.log('Adicionar:', p.name)
-                            }}
-                        />
-                    ))}
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="bg-gradient-to-r from-ember-dark via-zinc-900 to-ember-dark border border-zinc-800/50 rounded-2xl p-12 text-center space-y-4">
-                <h2 className="text-3xl font-black italic text-white">
-                    Pronto para saborear?
-                </h2>
-                <p className="text-ember-secondary max-w-xl mx-auto">
-                    Peça pelo WhatsApp e receba com a qualidade que você merece
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <FireButton
-                        onClick={() => {
-                            // TODO: integrar UTM link builder
+            <div className="space-y-16">
+                {/* Featured Product Section */}
+                <section className="mt-20">
+                    <FeaturedProduct 
+                        title={mockProducts[0].name}
+                        subtitle="Corte Premium"
+                        description={mockProducts[0].description}
+                        image={mockProducts[0].image}
+                        price={mockProducts[0].price}
+                        originalPrice={mockProducts[0].originalPrice}
+                        badge={mockProducts[0].badge?.text}
+                        ctaText="Pedir Agora"
+                        onCTA={() => {
                             window.open(
-                                `https://wa.me/${mockStore.whatsapp}?text=Olá,%20gostaria%20de%20fazer%20um%20pedido!`,
+                                `https://wa.me/${mockStore.whatsapp}?text=Olá!%20Quero%20o%20${mockProducts[0].name}`,
                                 '_blank'
                             )
                         }}
-                        size="lg"
-                    >
-                        💬 Abrir WhatsApp
-                    </FireButton>
-                    <FireButton
-                        onClick={() => console.log('Ver menu completo')}
-                        variant="secondary"
-                        size="lg"
-                    >
-                        📋 Menu Completo
-                    </FireButton>
-                </div>
-            </section>
-        </div>
+                    />
+                </section>
+
+                {/* Category & Filter Section */}
+                <section className="space-y-6">
+                    <SectionTitle
+                        title="Destaques do Mestre"
+                        subtitle="Aqueles cortes que não podem faltar"
+                    />
+                </section>
+
+                {/* Product Grid Section */}
+                <section className="space-y-6">
+                    <SectionTitle
+                        title="Todos os Cortes"
+                        subtitle="Escolha o seu favorito"
+                    />
+                    <ProductGrid
+                        products={mockProducts}
+                        onAddToCart={(product) => {
+                            // TODO: integrar com Zustand cart store
+                            console.log('Adicionar:', product.name)
+                        }}
+                        onViewProduct={(product) => {
+                            // TODO: abrir modal/página do produto
+                            console.log('Ver:', product.name)
+                        }}
+                    />
+                </section>
+
+                {/* CTA Section */}
+                <section className="bg-gradient-to-r from-ember-dark via-zinc-900 to-ember-dark border border-zinc-800/50 rounded-2xl p-12 text-center space-y-4">
+                    <h2 className="text-3xl font-black italic text-white">
+                        Pronto para saborear?
+                    </h2>
+                    <p className="text-ember-secondary max-w-xl mx-auto">
+                        Peça pelo WhatsApp e receba com a qualidade que você merece
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <FireButton
+                            onClick={() => {
+                                // TODO: integrar UTM link builder
+                                window.open(
+                                    `https://wa.me/${mockStore.whatsapp}?text=Olá,%20gostaria%20de%20fazer%20um%20pedido!`,
+                                    '_blank'
+                                )
+                            }}
+                            size="lg"
+                        >
+                            💬 Abrir WhatsApp
+                        </FireButton>
+                        <FireButton
+                            onClick={() => console.log('Ver menu completo')}
+                            variant="secondary"
+                            size="lg"
+                        >
+                            📋 Menu Completo
+                        </FireButton>
+                    </div>
+                </section>
+            </div>
+
+            {/* Footer */}
+            <Footer />
+        </>
     )
 }
