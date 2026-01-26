@@ -5,11 +5,10 @@
  */
 
 import React from 'react'
-import { SectionTitle } from '@/components/ui/SectionTitle'
 import { FireButton } from '@/components/ui/FireButton'
 import { Header } from '@/components/layout/Header'
 import { FeaturedProduct } from '@/components/layout/FeaturedProduct'
-import { ProductGrid } from '@/components/layout/ProductGrid'
+import { ShopContent } from '@/components/layout/ShopContent'
 import { Footer } from '@/components/layout/Footer'
 import { Metadata } from 'next'
 
@@ -30,7 +29,8 @@ const mockProducts = [
         description: 'Corte nobre, macio e suculento',
         price: 49.90,
         originalPrice: 79.90,
-        image: '/images/fraldinha.jpg', // TODO: placeholder
+        image: '/images/fraldinha.jpg',
+        category: 'Cortes Nobres',
         badge: { text: 'Oferta do Mestre', variant: 'promo' as const },
     },
     {
@@ -39,6 +39,7 @@ const mockProducts = [
         description: 'Importada, suculenta e tenra',
         price: 59.90,
         image: '/images/picanha.jpg',
+        category: 'Cortes Premium',
         badge: { text: 'Novo', variant: 'new' as const },
     },
     {
@@ -47,6 +48,7 @@ const mockProducts = [
         description: 'Perfeito para a churrasqueira',
         price: 44.90,
         image: '/images/assado.jpg',
+        category: 'Cortes Populares',
     },
     {
         id: '4',
@@ -54,6 +56,23 @@ const mockProducts = [
         description: 'Macia e saborosa',
         price: 39.90,
         image: '/images/alcatra.jpg',
+        category: 'Cortes Populares',
+    },
+    {
+        id: '5',
+        name: 'Costela Bovina',
+        description: 'Suculenta e ideal para grelha',
+        price: 54.90,
+        image: '/images/costela.jpg',
+        category: 'Cortes Nobres',
+    },
+    {
+        id: '6',
+        name: 'Moqueca Bovina',
+        description: 'Especialidade da casa',
+        price: 64.90,
+        image: '/images/moqueca.jpg',
+        category: 'Cortes Premium',
     },
 ]
 
@@ -116,31 +135,8 @@ export default async function ShopPage() {
                 </section>
 
                 {/* Category & Filter Section */}
-                <section className="space-y-6">
-                    <SectionTitle
-                        title="Destaques do Mestre"
-                        subtitle="Aqueles cortes que não podem faltar"
-                    />
-                </section>
+                <ShopContent products={mockProducts} />
 
-                {/* Product Grid Section */}
-                <section className="space-y-6">
-                    <SectionTitle
-                        title="Todos os Cortes"
-                        subtitle="Escolha o seu favorito"
-                    />
-                    <ProductGrid
-                        products={mockProducts}
-                        onAddToCart={(product) => {
-                            // TODO: integrar com Zustand cart store
-                            console.log('Adicionar:', product.name)
-                        }}
-                        onViewProduct={(product) => {
-                            // TODO: abrir modal/página do produto
-                            console.log('Ver:', product.name)
-                        }}
-                    />
-                </section>
 
                 {/* CTA Section */}
                 <section className="bg-gradient-to-r from-ember-dark via-zinc-900 to-ember-dark border border-zinc-800/50 rounded-2xl p-12 text-center space-y-4">
