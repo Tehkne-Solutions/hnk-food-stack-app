@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { TrendingUp, Users, Target, BarChart3 } from 'lucide-react'
 import { ConversionFunnel } from '@/components/admin/ConversionFunnel'
 import { UTMLinkBuilder } from '@/components/admin/UTMLinkBuilder'
+import { TrafficSourceChart } from '@/components/admin/TrafficSourceChart'
 
 interface Campaign {
   id: string
@@ -54,6 +55,13 @@ export default function MarketingPage() {
     addToCart: 1250,
     purchases: 155
   }
+
+  const trafficSources = [
+    { name: 'Google Ads', value: 3500, color: '#3b82f6', icon: '📱' },
+    { name: 'Meta Ads', value: 2850, color: '#8b5cf6', icon: '👍' },
+    { name: 'Organico', value: 1200, color: '#10b981', icon: '🔍' },
+    { name: 'Direto', value: 950, color: '#f59e0b', icon: '🎯' },
+  ]
 
   const totalRevenue = campaigns.reduce((sum, c) => sum + c.revenue, 0)
   const totalConversions = campaigns.reduce((sum, c) => sum + c.conversions, 0)
@@ -149,6 +157,17 @@ export default function MarketingPage() {
         </div>
         <div className="p-6">
           <UTMLinkBuilder />
+        </div>
+      </motion.div>
+
+      <motion.div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/40 overflow-hidden backdrop-blur-md">
+        <div className="p-6 border-b border-zinc-800">
+          <h2 className="text-xl font-black italic text-white">
+            Trafego por <span className="text-amber-500">Fonte</span>
+          </h2>
+        </div>
+        <div className="p-6">
+          <TrafficSourceChart sources={trafficSources} />
         </div>
       </motion.div>
 
