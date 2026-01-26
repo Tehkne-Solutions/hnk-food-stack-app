@@ -6,6 +6,7 @@
 
 import React from 'react'
 import { SectionTitle } from '@/components/ui/SectionTitle'
+import { ParallaxBackground } from '@/components/layout/ParallaxBackground'
 
 export default function ShopLayout({
     children,
@@ -13,7 +14,10 @@ export default function ShopLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="min-h-screen bg-ember-dark text-white">
+        <div className="min-h-screen bg-ember-dark text-white overflow-hidden">
+            {/* Parallax Background */}
+            <ParallaxBackground />
+            
             {/* Header */}
             <header className="sticky top-0 z-50 bg-ember-dark/95 backdrop-blur-md border-b border-zinc-800/50">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -27,7 +31,7 @@ export default function ShopLayout({
             </header>
 
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 py-8">
+            <main className="relative max-w-7xl mx-auto px-4 py-8">
                 {children}
             </main>
 
