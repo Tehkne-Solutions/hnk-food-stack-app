@@ -10,14 +10,22 @@
 
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Supabase credentials not configured. Add to .env.local");
+// Lazy initialization - only throw error when actually using auth functions
+let supabase: ReturnType<typeof createClient> | null = null;
+
+function getSupabaseClient() {
+    if (supabase) return supabase;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+        throw new Error("Supabase credentials not configured. Add to .env.local");
+    }
+
+    supabase = createClient(supabaseUrl, supabaseAnonKey);
+    return supabase;
 }
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 /**
  * Fazer login com Magic Link (Email)
@@ -25,6 +33,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
  */
 export const signInWithMagicLink = async (email: string) => {
     try {
+        const supabase = getSupabaseClient();
         const { error } = await supabase.auth.signInWithOtp({
             email,
             options: {
@@ -45,6 +54,7 @@ export const signInWithMagicLink = async (email: string) => {
  */
 export const signInWithGoogle = async () => {
     try {
+        const supabase = getSupabaseClient();
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
@@ -65,6 +75,7 @@ export const signInWithGoogle = async () => {
  */
 export const signInWithGitHub = async () => {
     try {
+        const supabase = getSupabaseClient();
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "github",
             options: {
@@ -85,6 +96,7 @@ export const signInWithGitHub = async () => {
  */
 export const logout = async () => {
     try {
+        const supabase = getSupabaseClient();
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
         return { success: true };
@@ -99,6 +111,7 @@ export const logout = async () => {
  */
 export const getSession = async () => {
     try {
+        const supabase = getSupabaseClient();
         const {
             data: { session },
             error,
@@ -116,6 +129,7 @@ export const getSession = async () => {
  */
 export const getCurrentUser = async () => {
     try {
+        const supabase = getSupabaseClient();
         const {
             data: { user },
             error,
@@ -133,7 +147,9 @@ export const getCurrentUser = async () => {
  * Usar com useEffect em componentes cliente
  */
 export const onAuthStateChange = (callback: (user: any) => void) => {
-    return supabase.auth.onAuthStateChange((event, session) => {
+    const supabase = getSupabaseClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return supabase.auth.onAuthStateChange((event: any, session: any) => {
         callback(session?.user || null);
     });
 };
@@ -148,6 +164,7 @@ export const updateUserProfile = async (
     }
 ) => {
     try {
+        const supabase = getSupabaseClient();
         const { data: updatedUser, error } = await supabase.auth.updateUser({
             data,
         });
@@ -158,10 +175,5 @@ export const updateUserProfile = async (
         return { success: false, error: String(error) };
     }
 };
-
-/**
- * Pegar cliente Supabase (para reus em outras funções)
- */
-export const getSupabaseClient = () => supabase;
 
 export default supabase;
