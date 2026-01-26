@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Menu, X, BarChart3, ShoppingBag, AlertCircle, Users, LogOut } from 'lucide-react'
+import { Menu, X, BarChart3, ShoppingBag, AlertCircle, Users, LogOut, TrendingUp } from 'lucide-react'
 
 export default function AdminLayout({
     children,
@@ -16,6 +16,7 @@ export default function AdminLayout({
         { name: 'Pedidos', href: '/admin/orders', icon: ShoppingBag },
         { name: 'Produtos', href: '/admin/products', icon: AlertCircle },
         { name: 'Clientes', href: '/admin/customers', icon: Users },
+        { name: 'Marketing', href: '/admin/marketing', icon: TrendingUp },
     ]
 
     return (
