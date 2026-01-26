@@ -72,6 +72,10 @@ export function FeaturedProduct({
                                 fill
                                 className="object-cover rounded-2xl"
                                 priority
+                                quality={90}
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                placeholder="blur"
+                                blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 500'%3E%3Crect fill='%2318181b' width='600' height='500'/%3E%3C/svg%3E"
                             />
 
                             {/* Overlay gradient */}

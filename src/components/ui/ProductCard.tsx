@@ -195,6 +195,10 @@ export function ProductCard({
                     className="object-cover"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     priority={false}
+                    quality={85}
+                    placeholder="blur"
+                    blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%2318181b' width='400' height='300'/%3E%3C/svg%3E"
+                    loading="lazy"
                 />
                 {/* Overlay gradient elegante */}
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent" />
