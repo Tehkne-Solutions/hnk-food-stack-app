@@ -267,16 +267,19 @@ DEVE-TER ANTES DE FASE 7:
 ## 💡 OTIMIZAÇÕES PROPOSTAS
 
 ### **Otimizar Ordem de Desenvolvimento**
+
 1. **Skip 3.12 (Search)**: Implementar após Supabase estar pronto (FASE 5)
 2. **Paralelizar 4 + 5**: Analytics pode rodar em background enquanto dev checkout
 3. **Early testing**: Criar testes unitários ENQUANTO desenvolve cada micro-fase
 
 ### **Reduzir Tempo Total**
+
 - **Usar templates Shadcn/UI** para painéis administrativos (economiza ~10h)
 - **Implementar Stripe de verdade cedo** para validar integração
 - **Usar Supabase Realtime** para atualizar estoque em tempo real
 
 ### **Aumentar Qualidade**
+
 - **Adicionar E2E tests** em cada FASE (Playwright/Cypress)
 - **Code review antes de commit** (GitHub PRs)
 - **Performance budgets** por página
