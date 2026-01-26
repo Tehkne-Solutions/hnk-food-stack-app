@@ -15,16 +15,34 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 // Lazy initialization - only throw error when actually using auth functions
 let supabase: ReturnType<typeof createClient> | null = null;
+let initError: string | null = null;
 
 function getSupabaseClient() {
     if (supabase) return supabase;
 
-    if (!supabaseUrl || !supabaseAnonKey) {
-        throw new Error("Supabase credentials not configured. Add to .env.local");
+    if (initError) {
+        throw new Error(initError);
     }
 
-    supabase = createClient(supabaseUrl, supabaseAnonKey);
-    return supabase;
+    if (!supabaseUrl || !supabaseAnonKey) {
+        initError = "Supabase credentials not configured. Add to .env.local";
+        // Don't throw during build - return null for server-side rendering
+        if (typeof window === 'undefined') {
+            console.warn(initError);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return null as any;
+        }
+        throw new Error(initError);
+    }
+
+    try {
+        supabase = createClient(supabaseUrl, supabaseAnonKey);
+        return supabase;
+    } catch (error) {
+        initError = `Failed to initialize Supabase: ${error}`;
+        console.error(initError);
+        throw new Error(initError);
+    }
 }
 
 /**
@@ -34,6 +52,9 @@ function getSupabaseClient() {
 export const signInWithMagicLink = async (email: string) => {
     try {
         const supabase = getSupabaseClient();
+        if (!supabase) {
+            return { success: false, error: "Authentication not configured" };
+        }
         const { error } = await supabase.auth.signInWithOtp({
             email,
             options: {
@@ -55,6 +76,9 @@ export const signInWithMagicLink = async (email: string) => {
 export const signInWithGoogle = async () => {
     try {
         const supabase = getSupabaseClient();
+        if (!supabase) {
+            return { success: false, error: "Authentication not configured" };
+        }
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
@@ -76,6 +100,9 @@ export const signInWithGoogle = async () => {
 export const signInWithGitHub = async () => {
     try {
         const supabase = getSupabaseClient();
+        if (!supabase) {
+            return { success: false, error: "Authentication not configured" };
+        }
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "github",
             options: {
@@ -97,6 +124,9 @@ export const signInWithGitHub = async () => {
 export const logout = async () => {
     try {
         const supabase = getSupabaseClient();
+        if (!supabase) {
+            return { success: true };
+        }
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
         return { success: true };
@@ -112,6 +142,9 @@ export const logout = async () => {
 export const getSession = async () => {
     try {
         const supabase = getSupabaseClient();
+        if (!supabase) {
+            return null;
+        }
         const {
             data: { session },
             error,
@@ -130,6 +163,9 @@ export const getSession = async () => {
 export const getCurrentUser = async () => {
     try {
         const supabase = getSupabaseClient();
+        if (!supabase) {
+            return null;
+        }
         const {
             data: { user },
             error,
@@ -146,8 +182,12 @@ export const getCurrentUser = async () => {
  * Hook para monitorar auth state
  * Usar com useEffect em componentes cliente
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const onAuthStateChange = (callback: (user: any) => void) => {
     const supabase = getSupabaseClient();
+    if (!supabase) {
+        return undefined;
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return supabase.auth.onAuthStateChange((event: any, session: any) => {
         callback(session?.user || null);
@@ -165,6 +205,9 @@ export const updateUserProfile = async (
 ) => {
     try {
         const supabase = getSupabaseClient();
+        if (!supabase) {
+            return { success: false, error: "Authentication not configured" };
+        }
         const { data: updatedUser, error } = await supabase.auth.updateUser({
             data,
         });
