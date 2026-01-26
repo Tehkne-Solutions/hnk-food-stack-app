@@ -2,6 +2,8 @@
  * Shop Home Page [slug]
  * Vitrine principal da loja (ex: /bem-estar)
  * Exibe: destaques, grid de produtos, categor ias, CTAs
+ * 
+ * SEO: Meta tags dinâmicas por loja, Schema.org JSON-LD
  */
 
 import React from 'react'
@@ -10,6 +12,7 @@ import { FeaturedProduct } from '@/components/layout/FeaturedProduct'
 import { ShopContent } from '@/components/layout/ShopContent'
 import { Footer } from '@/components/layout/Footer'
 import { CTAWhatsApp } from '@/components/layout/CTAWhatsApp'
+import { SchemaOrg } from '@/components/seo/SchemaOrg'
 import { Metadata } from 'next'
 
 // Mock de dados - será substituído por Prisma + Supabase
@@ -20,6 +23,22 @@ const mockStore = {
     logo: '/images/bem-estar-logo.png', // TODO: substituir por URL real
     description: 'Churrascaria com os melhores cortes da região',
     whatsapp: '11987654321',
+}
+
+// Segunda loja para teste
+const mockStore2 = {
+    id: 'premium-cuts-1',
+    name: 'Premium Cuts Steakhouse',
+    slug: 'premium-cuts',
+    logo: '/images/premium-cuts-logo.png',
+    description: 'Steakhouse premium com cortes importados',
+    whatsapp: '11999887766',
+}
+
+// Mapear slug para store
+const storeMap: Record<string, typeof mockStore> = {
+    'bem-estar': mockStore,
+    'premium-cuts': mockStore2,
 }
 
 const mockProducts = [
@@ -81,26 +100,45 @@ export async function generateMetadata({
 }: {
     params: { slug: string }
 }): Promise<Metadata> {
-    // TODO: buscar store real do Supabase
+    const store = storeMap[params.slug] || mockStore
+    const baseUrl = 'https://hnk-food-stack-app.vercel.app'
+    const ogImage = `${baseUrl}/og-images/${params.slug}-og.jpg`
+
     return {
-        title: `${mockStore.name} | HNK Food Stack`,
-        description: mockStore.description,
+        title: `${store.name} | Churrascaria Online - Compre Agora`,
+        description: `${store.description}. Acesse ${store.name} e peça os melhores cortes pelo WhatsApp. Entrega rápida!`,
+        keywords: ['churrascaria', 'cortes de carne', 'carne premium', params.slug, store.name.toLowerCase()],
+
+        // OpenGraph para redes sociais
         openGraph: {
-            title: mockStore.name,
-            description: mockStore.description,
-            url: `https://hnk-food-stack-app-main.vercel.app/${params.slug}`,
             type: 'website',
+            locale: 'pt_BR',
+            url: `${baseUrl}/${params.slug}`,
+            siteName: 'HNK Food Stack',
+            title: `${store.name} | Compre Online`,
+            description: `${store.description}. Peça pelo WhatsApp!`,
             images: [
                 {
-                    url: '/images/og-bem-estar.jpg', // TODO
+                    url: ogImage,
                     width: 1200,
                     height: 630,
-                    alt: mockStore.name,
+                    alt: store.name,
+                    type: 'image/jpeg',
                 },
             ],
         },
+
+        // Twitter Card
+        twitter: {
+            card: 'summary_large_image',
+            title: `${store.name} | Churrascaria Online`,
+            description: `${store.description}. Peça pelo WhatsApp agora!`,
+            images: [ogImage],
+        },
+
+        // Alternates para canonical
         alternates: {
-            canonical: `https://hnk-food-stack-app-main.vercel.app/${params.slug}`,
+            canonical: `${baseUrl}/${params.slug}`,
         },
     }
 }
@@ -110,13 +148,16 @@ export default async function ShopPage() {
 
     return (
         <>
+            {/* Schema.org SEO */}
+            <SchemaOrg store={mockStore} />
+
             {/* Header Sticky */}
             <Header storeName={mockStore.name} logoUrl={mockStore.logo} />
 
             <div className="space-y-16">
                 {/* Featured Product Section */}
                 <section className="mt-20">
-                    <FeaturedProduct 
+                    <FeaturedProduct
                         title={mockProducts[0].name}
                         subtitle="Corte Premium"
                         description={mockProducts[0].description}

@@ -15,46 +15,46 @@
 import { useState, useMemo } from 'react'
 
 export interface Product {
-  id: string
-  name: string
-  description: string
-  price: number
-  image: string
-  category?: string
+    id: string
+    name: string
+    description: string
+    price: number
+    image: string
+    category?: string
 }
 
 interface UseCategoryFilterReturn {
-  selectedCategory: string | null
-  filteredProducts: Product[]
-  categories: string[]
-  handleCategoryChange: (category: string | null) => void
+    selectedCategory: string | null
+    filteredProducts: Product[]
+    categories: string[]
+    handleCategoryChange: (category: string | null) => void
 }
 
 export function useCategoryFilter(products: Product[]): UseCategoryFilterReturn {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
-  // Extrair categorias únicas dos produtos
-  const categories = useMemo(() => {
-    const uniqueCategories = Array.from(
-      new Set(products.map((p) => p.category).filter(Boolean))
-    )
-    return uniqueCategories as string[]
-  }, [products])
+    // Extrair categorias únicas dos produtos
+    const categories = useMemo(() => {
+        const uniqueCategories = Array.from(
+            new Set(products.map((p) => p.category).filter(Boolean))
+        )
+        return uniqueCategories as string[]
+    }, [products])
 
-  // Filtrar produtos baseado na categoria selecionada
-  const filteredProducts = useMemo(() => {
-    if (!selectedCategory) return products
-    return products.filter((p) => p.category === selectedCategory)
-  }, [products, selectedCategory])
+    // Filtrar produtos baseado na categoria selecionada
+    const filteredProducts = useMemo(() => {
+        if (!selectedCategory) return products
+        return products.filter((p) => p.category === selectedCategory)
+    }, [products, selectedCategory])
 
-  const handleCategoryChange = (category: string | null) => {
-    setSelectedCategory(category)
-  }
+    const handleCategoryChange = (category: string | null) => {
+        setSelectedCategory(category)
+    }
 
-  return {
-    selectedCategory,
-    filteredProducts,
-    categories,
-    handleCategoryChange,
-  }
+    return {
+        selectedCategory,
+        filteredProducts,
+        categories,
+        handleCategoryChange,
+    }
 }
