@@ -17,6 +17,8 @@ import { trackBeginCheckout as trackGABeginCheckout } from '@/lib/analytics'
  * Tipos de endereço
  */
 interface Address {
+    name: string
+    phone: string
     street: string
     number: string
     complement?: string
@@ -48,6 +50,8 @@ export function CheckoutComponent() {
     const [step, setStep] = useState<'address' | 'shipping' | 'payment'>('address')
     const [selectedShipping, setSelectedShipping] = useState<ShippingOption | null>(null)
     const [address, setAddress] = useState<Address>({
+        name: '',
+        phone: '',
         street: '',
         number: '',
         neighborhood: '',
@@ -66,23 +70,31 @@ export function CheckoutComponent() {
         try {
             // Simular processamento de pagamento
             const orderId = `ORD-${Date.now()}`
-
-            // Aqui você faria a chamada real à API de pagamento
-            // const paymentResult = await fetch('/api/payments/stripe', { ... })
+            const cartValue = getTotal()
+            const total = cartValue + selectedShipping.price
 
             // Após pagamento bem-sucedido, enviar notificação WhatsApp
-            // await fetch('/api/notifications/whatsapp', {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify({
-            //     type: 'order_confirmed',
-            //     phone: '11999999999', // Obter do checkout
-            //     orderId,
-            //     customerName: 'Cliente',
-            //     total: totalValue,
-            //     estimatedDelivery: '45 minutos'
-            //   })
-            // })
+            try {
+                await fetch('/api/notifications/whatsapp', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    event: 'order_created',
+                    phone: address.phone,
+                    order: {
+                      customerId: 'temp-' + Date.now(),
+                      customerName: address.name,
+                      orderId,
+                      items: items.map(i => `${i.name} x${i.quantity}`).join(', '),
+                      total: total.toFixed(2),
+                      estimatedDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR'),
+                      confirmationCode: Math.random().toString(36).substring(7).toUpperCase()
+                    }
+                  })
+                })
+              } catch (whatsappError) {
+                console.warn('Não foi possível enviar notificação WhatsApp:', whatsappError)
+              }
 
             // Redirecionar para página de confirmação
             window.location.href = `/confirmation?orderId=${orderId}`
@@ -97,6 +109,8 @@ export function CheckoutComponent() {
     // Validar endereço
     const isAddressValid = () => {
         return (
+            address.name &&
+            address.phone &&
             address.street &&
             address.number &&
             address.neighborhood &&
@@ -111,7 +125,6 @@ export function CheckoutComponent() {
         const cartValue = getTotal()
         trackCheckoutStart(cartValue)
         trackGABeginCheckout(cartValue)
-        trackDataLayerCheckout(cartValue)
         setStep('shipping')
     }
 
@@ -181,6 +194,30 @@ export function CheckoutComponent() {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Nome */}
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm text-zinc-400 mb-2">Nome Completo</label>
+                                    <input
+                                        type="text"
+                                        placeholder="João Silva"
+                                        value={address.name}
+                                        onChange={(e) => setAddress({ ...address, name: e.target.value })}
+                                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-ember-accent transition-colors"
+                                    />
+                                </div>
+
+                                {/* Telefone */}
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm text-zinc-400 mb-2">Telefone / WhatsApp</label>
+                                    <input
+                                        type="tel"
+                                        placeholder="(11) 99999-9999"
+                                        value={address.phone}
+                                        onChange={(e) => setAddress({ ...address, phone: e.target.value })}
+                                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-ember-accent transition-colors"
+                                    />
+                                </div>
+
                                 {/* CEP */}
                                 <div className="md:col-span-2">
                                     <label className="block text-sm text-zinc-400 mb-2">CEP</label>
