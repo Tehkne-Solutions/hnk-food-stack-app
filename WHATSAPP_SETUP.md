@@ -1,6 +1,7 @@
 # 📱 Guia de Configuração - WhatsApp API (n8n + Twilio)
 
 ## Pré-requisitos
+
 - Conta n8n (n8n.cloud ou self-hosted)
 - Conta Twilio com WhatsApp Sandbox OU Meta Business Account
 - Chave de API n8n
@@ -76,7 +77,7 @@
 1. Em n8n, crie novo workflow
 2. Adicione trigger "Webhook"
 3. Configure para receber POST requests
-4. Copie o URL do webhook (ex: https://n8n-instance.com/webhook/xyz123)
+4. Copie o URL do webhook (ex: <https://n8n-instance.com/webhook/xyz123>)
 5. Teste com cURL:
 
 ```bash
@@ -134,6 +135,7 @@ await notifyOrderStatus(customer.phone, {
 ## Templates de Mensagem (n8n)
 
 ### order_confirmation
+
 ```
 Oi {{customer_name}} 👋
 
@@ -151,6 +153,7 @@ Obrigado! 🙏
 ```
 
 ### order_status_update
+
 ```
 Oi {{customer_name}}! 
 
@@ -187,15 +190,18 @@ curl http://localhost:3000/api/notifications/whatsapp
 ## Troubleshooting
 
 ### "N8N_WHATSAPP_WEBHOOK não configurado"
+
 - Adicione `N8N_WHATSAPP_WEBHOOK` ao `.env.local`
 - Reinicie o servidor Next.js
 
 ### Mensagens não chegando
+
 1. Verifique o webhook em n8n (aba "Logs")
 2. Confirme o formato do telefone: `55 + DDD + 9 + NNNN-NNNN`
 3. Teste o número de Twilio/Meta sandbox
 
 ### Rate Limiting
+
 - n8n: máx 60 req/min por padrão
 - Twilio: máx 1000 msgs/dia no sandbox
 - Meta: limite de 1000 msgs/dia para novos números
@@ -203,6 +209,7 @@ curl http://localhost:3000/api/notifications/whatsapp
 ## Produção
 
 Para produção, recomenda-se:
+
 - [ ] Usar Meta Business WhatsApp (não Twilio sandbox)
 - [ ] Configurar templates de mensagem aprovados
 - [ ] Implementar fila de mensagens (Bull/Bee-Queue)

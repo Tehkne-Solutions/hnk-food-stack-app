@@ -76,25 +76,25 @@ export function CheckoutComponent() {
             // Após pagamento bem-sucedido, enviar notificação WhatsApp
             try {
                 await fetch('/api/notifications/whatsapp', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    event: 'order_created',
-                    phone: address.phone,
-                    order: {
-                      customerId: 'temp-' + Date.now(),
-                      customerName: address.name,
-                      orderId,
-                      items: items.map(i => `${i.name} x${i.quantity}`).join(', '),
-                      total: total.toFixed(2),
-                      estimatedDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR'),
-                      confirmationCode: Math.random().toString(36).substring(7).toUpperCase()
-                    }
-                  })
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event: 'order_created',
+                        phone: address.phone,
+                        order: {
+                            customerId: 'temp-' + Date.now(),
+                            customerName: address.name,
+                            orderId,
+                            items: items.map(i => `${i.name} x${i.quantity}`).join(', '),
+                            total: total.toFixed(2),
+                            estimatedDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR'),
+                            confirmationCode: Math.random().toString(36).substring(7).toUpperCase()
+                        }
+                    })
                 })
-              } catch (whatsappError) {
+            } catch (whatsappError) {
                 console.warn('Não foi possível enviar notificação WhatsApp:', whatsappError)
-              }
+            }
 
             // Redirecionar para página de confirmação
             window.location.href = `/confirmation?orderId=${orderId}`
