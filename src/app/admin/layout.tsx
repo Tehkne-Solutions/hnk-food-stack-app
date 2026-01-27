@@ -3,13 +3,17 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X, BarChart3, ShoppingBag, AlertCircle, Users, LogOut, TrendingUp } from 'lucide-react'
+import { AdminAuthProvider, useAdminAuth } from '@/contexts/AdminAuthContext'
+import Link from 'next/link'
 
-export default function AdminLayout({
-    children,
-}: {
-    children: React.ReactNode
-}) {
+/**
+ * Layout Admin com Autenticação
+ * FASE 7: Proteção de rotas com context
+ */
+
+function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const { user, logout } = useAdminAuth()
 
     const menuItems = [
         { name: 'Dashboard', href: '/admin', icon: BarChart3 },
@@ -33,23 +37,36 @@ export default function AdminLayout({
                     <p className="text-xs text-zinc-500">Controle da Bem Estar</p>
                 </div>
 
+                {/* User Info */}
+                {user && (
+                    <div className="mb-6 p-3 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                        <p className="text-xs text-zinc-400">Conectado como</p>
+                        <p className="text-sm font-semibold text-white truncate">{user.name}</p>
+                        <p className="text-xs text-amber-500">{user.role}</p>
+                    </div>
+                )}
+
                 <nav className="space-y-2">
                     {menuItems.map((item) => {
                         const Icon = item.icon
                         return (
-                            <a
+                            <Link
                                 key={item.name}
                                 href={item.href}
+                                onClick={() => setSidebarOpen(false)}
                                 className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-zinc-300 transition-all hover:bg-zinc-900 hover:text-amber-500"
                             >
                                 <Icon size={20} />
                                 {item.name}
-                            </a>
+                            </Link>
                         )
                     })}
                 </nav>
 
-                <button className="absolute bottom-6 left-6 right-6 flex items-center gap-2 rounded-lg bg-red-900/20 px-4 py-3 text-sm font-semibold text-red-400 transition-all hover:bg-red-900/40">
+                <button
+                    onClick={logout}
+                    className="absolute bottom-6 left-6 right-6 flex items-center gap-2 rounded-lg bg-red-900/20 px-4 py-3 text-sm font-semibold text-red-400 transition-all hover:bg-red-900/40"
+                >
                     <LogOut size={20} />
                     Sair
                 </button>
@@ -66,5 +83,20 @@ export default function AdminLayout({
                 <main className="p-6">{children}</main>
             </div>
         </div>
+    )
+}
+
+/**
+ * Root Layout com Provider
+ */
+export default function AdminLayout({
+    children,
+}: {
+    children: React.ReactNode
+}) {
+    return (
+        <AdminAuthProvider>
+            <AdminLayoutContent>{children}</AdminLayoutContent>
+        </AdminAuthProvider>
     )
 }
