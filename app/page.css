@@ -1,0 +1,9 @@
+/* Brick Pattern for Testimonials Section */
+.brick-pattern {
+    background-image:
+        radial-gradient(#1a1a1a 2px, transparent 2px),
+        linear-gradient(0deg, #111 2px, transparent 2px),
+        linear-gradient(90deg, #111 2px, transparent 2px);
+    background-size: 40px 40px, 80px 40px, 80px 40px;
+    background-position: 0 0, 0 0, 0 0;
+}

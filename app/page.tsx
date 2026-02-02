@@ -1,339 +1,492 @@
 'use client'
 
-/**
- * HandsUP FoodStack - Landing Page
- * Premium food ordering platform
- */
-
-import { useRef } from 'react'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight, Zap, Users, TrendingUp, CheckCircle2, MessageCircle, Smartphone, Lock } from 'lucide-react'
+import { Utensils, Zap, MessageCircle, Settings, Sprout, TrendingUp, Shield, Smartphone, Quote, Star, Flame, Instagram, Linkedin, Twitter, ShieldCheck, ChevronRight, MapPin } from 'lucide-react'
+import Link from 'next/link'
+import { useState, useEffect, useRef } from 'react'
+import './page.css'
 
-export default function Home() {
-  const scrollRef = useRef<HTMLDivElement>(null)
+// ============================================
+// 1. EMBERS CANVAS (Partículas de Brasas)
+// ============================================
+const EmbersCanvas = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let particles: any[] = []
+    const particleCount = 40
+
+    const resize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+
+    class Particle {
+      x: number; y: number; size: number; speedY: number; speedX: number; opacity: number;
+      constructor() {
+        this.x = Math.random() * canvas.width
+        this.y = canvas.height + 100
+        this.size = Math.random() * 3 + 1
+        this.speedY = Math.random() * -1.5 - 0.5
+        this.speedX = Math.random() * 1 - 0.5
+        this.opacity = Math.random() * 0.5 + 0.5
+      }
+      update() {
+        this.y += this.speedY
+        this.x += this.speedX
+        if (this.y < -10) this.y = canvas.height + 100
+      }
+      draw() {
+        if (!ctx) return
+        ctx.fillStyle = `rgba(245, 158, 11, ${this.opacity})`
+        ctx.shadowBlur = 10
+        ctx.shadowColor = '#f59e0b'
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+        ctx.fill()
+      }
+    }
+
+    const init = () => {
+      particles = []
+      for (let i = 0; i < particleCount; i++) particles.push(new Particle())
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      particles.forEach(p => { p.update(); p.draw() })
+      requestAnimationFrame(animate)
+    }
+
+    window.addEventListener('resize', resize)
+    resize()
+    init()
+    animate()
+    return () => window.removeEventListener('resize', resize)
+  }, [])
+
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[1]" />
+}
+
+// ============================================
+// 2. HERO INDUSTRIAL
+// ============================================
+const HeroIndustrial = () => {
+  return (
+    <section className="relative min-h-[90vh] w-full bg-[#050505] overflow-hidden flex items-center">
+      <EmbersCanvas />
+
+      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center z-10">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="space-y-8"
+        >
+          <div className="space-y-2">
+            <h2 className="text-zinc-500 font-mono text-sm tracking-[0.4em] uppercase">
+              HNK Food Stack // v2.0
+            </h2>
+            <h1 className="text-6xl md:text-8xl font-black uppercase italic leading-[0.85] tracking-tighter text-white">
+              FAÇA PARTE DO <br />
+              FUTURO DA <br />
+              <span className="text-amber-500 drop-shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+                GASTRONOMIA
+              </span>
+            </h1>
+          </div>
+
+          <p className="max-w-md text-zinc-400 font-medium text-lg leading-relaxed border-l-2 border-zinc-800 pl-6">
+            Onde o aço encontra a inteligência. Transformamos sua operação bruta em uma máquina de vendas refinada e automática.
+          </p>
+
+          <div className="flex flex-wrap gap-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="group relative px-8 py-5 bg-amber-500 text-black font-black uppercase italic tracking-widest rounded-sm overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <span className="relative flex items-center gap-2">
+                ENTRAR NO SISTEMA
+              </span>
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05, borderColor: '#f59e0b' }}
+              className="px-8 py-5 bg-transparent border-2 border-zinc-700 text-white font-black uppercase italic tracking-widest rounded-sm flex items-center gap-2 hover:text-amber-500 transition-all"
+            >
+              CADASTRAR AGORA
+            </motion.button>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="relative flex justify-center lg:justify-end"
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-amber-600/10 blur-[120px] rounded-full" />
+
+          <div className="w-full max-w-[600px] h-96 bg-gradient-to-br from-zinc-300 via-amber-600 to-zinc-800 rounded-lg z-10 drop-shadow-[0_30px_50px_rgba(0,0,0,0.9)] flex items-center justify-center overflow-hidden">
+            <div className="text-center p-8">
+              <Flame size={128} className="text-amber-200 mx-auto mb-4 animate-bounce" />
+              <p className="text-white font-black text-2xl">ESPETO INDUSTRIAL</p>
+              <p className="text-amber-200 text-sm mt-2">Imagem Premium • Skewer 4K</p>
+            </div>
+          </div>
+
+          <motion.div
+            animate={{ y: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ repeat: Infinity, duration: 3 }}
+            className="absolute bottom-0 right-1/4 w-32 h-32 bg-amber-500/20 blur-3xl rounded-full"
+          />
+        </motion.div>
+      </div>
+
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30">
+        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 rotate-90 mb-4">SCROLL</span>
+        <div className="w-[1px] h-12 bg-gradient-to-b from-amber-500 to-transparent" />
+      </div>
+    </section>
+  )
+}
+
+// ============================================
+// 3. FEATURE PLATES
+// ============================================
+const MetalCard = ({ title, description, icon: Icon, href }: any) => {
+  return (
+    <motion.div
+      whileHover={{ y: -10, rotateX: 5 }}
+      className="relative group p-[1px] rounded-2xl bg-gradient-to-b from-zinc-400 to-zinc-800 shadow-2xl cursor-pointer"
+    >
+      <Link href={href}>
+        <div className="relative bg-gradient-to-br from-zinc-100 via-zinc-300 to-zinc-500 p-8 rounded-2xl h-full flex flex-col items-center text-center">
+
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-[linear-gradient(110deg,transparent,white,transparent)] -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+
+          <div className="mb-6 p-4 rounded-full bg-zinc-200/50 border border-zinc-400 shadow-inner">
+            <Icon className="text-zinc-900" size={32} />
+          </div>
+
+          <h3 className="font-black uppercase italic tracking-tighter text-zinc-950 text-xl mb-3">
+            {title}
+          </h3>
+
+          <p className="text-zinc-800 font-bold text-sm leading-relaxed mb-6">
+            {description}
+          </p>
+
+          <span className="mt-auto text-[10px] font-black uppercase tracking-[0.2em] text-zinc-900 border-b-2 border-zinc-900 hover:text-amber-600 hover:border-amber-600 transition-colors">
+            Explorar Sistema
+          </span>
+
+          <div className="absolute -top-4 -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              className="w-12 h-16 bg-amber-500 blur-xl rounded-full"
+            />
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  )
+}
+
+const FeaturePlates = () => {
   const features = [
     {
-      icon: Smartphone,
-      title: 'Cardápio Digital',
-      description: 'Visualize todos os pratos com fotos, descrições e valores em tempo real',
-      color: 'from-orange-500/20 to-red-500/20'
+      title: "Cardápio Digital",
+      description: "Seu cardápio vira um aplicativo PWA. Rápido, intuitivo e com IA para otimizar vendas.",
+      icon: Utensils,
+      href: "/sistema/cardapio-digital"
     },
     {
+      title: "Pedidos Rápidos",
+      description: "Sistema de pedidos otimizado para alta demanda. Converta cliques em churrasco na mesa.",
       icon: Zap,
-      title: 'Pedidos Rápidos',
-      description: 'Faça seu pedido em segundos com nossa interface intuitiva',
-      color: 'from-amber-500/20 to-orange-500/20'
+      href: "/sistema/pedidos-rapidos"
     },
     {
+      title: "WhatsApp & IA",
+      description: "Atendimento automático, CRM inteligente e marketing via WhatsApp. Sua IA no comando.",
       icon: MessageCircle,
-      title: 'WhatsApp Integration',
-      description: 'Receba confirmações e atualizações diretamente no WhatsApp',
-      color: 'from-green-500/20 to-emerald-500/20'
+      href: "/sistema/whatsapp-ia"
     },
     {
+      title: "Gestão Completa",
+      description: "Controle total da sua operação, estoque e equipe em um dashboard metálico e robusto.",
+      icon: Settings,
+      href: "/sistema/gestao-completa"
+    },
+    {
+      title: "Eco-Friendly",
+      description: "Otimize rotas e reduza o desperdício. Tecnologia para um churrasco mais sustentável.",
+      icon: Sprout,
+      href: "/sistema/sustentabilidade"
+    },
+    {
+      title: "Analytics Premium",
+      description: "Decisões baseadas em dados. Visualize tendências e otimize seu lucro em tempo real.",
       icon: TrendingUp,
-      title: 'Analytics em Tempo Real',
-      description: 'Acompanhe seus gastos e histórico de pedidos',
-      color: 'from-blue-500/20 to-cyan-500/20'
+      href: "/sistema/analytics"
     },
     {
-      icon: Users,
-      title: 'Comunidade Social',
-      description: 'Veja reviews, compartilhe experiências e ganhe pontos',
-      color: 'from-purple-500/20 to-pink-500/20'
+      title: "Segurança Imbatível",
+      description: "Dados protegidos com criptografia de ponta. Aço digital contra qualquer ameaça.",
+      icon: Shield,
+      href: "/sistema/seguranca"
     },
     {
-      icon: Lock,
-      title: 'Segurança Premium',
-      description: 'Dados protegidos com autenticação segura e criptografia',
-      color: 'from-indigo-500/20 to-purple-500/20'
+      title: "App Mobile PWA",
+      description: "Seu negócio na palma da mão do cliente. Instale seu cardápio como um app nativo.",
+      icon: Smartphone,
+      href: "/sistema/app-mobile"
+    },
+  ]
+
+  return (
+    <section className="relative py-24 px-6 bg-[#050505] border-t border-zinc-900 overflow-hidden">
+      <motion.div
+        animate={{ opacity: [0.2, 0.4, 0.2] }}
+        transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
+        className="absolute inset-0 bg-amber-500/5 blur-[100px] pointer-events-none"
+      />
+
+      <div className="container mx-auto z-10 relative">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true, amount: 0.3 }}
+          className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter text-white text-center mb-16"
+        >
+          O PODER DO AÇO <br />
+          <span className="text-amber-500">NA SUA BRASA.</span>
+        </motion.h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <MetalCard {...feature} />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ============================================
+// 4. BRICK TESTIMONIALS
+// ============================================
+const BrickTestimonials = () => {
+  const testimonials = [
+    {
+      name: "Seu Junior",
+      role: "Dono da Bem Estar",
+      text: "O sistema não só organiza, ele vende sozinho. O espeto metálico no site virou a marca registrada do meu delivery.",
+      rating: 5
+    },
+    {
+      name: "Ricardo Silva",
+      role: "Gerente do Fogo de Chão",
+      text: "A IA do WhatsApp reduziu meu tempo de resposta em 90%. O ROI foi imediato. É bruto e tecnológico.",
+      rating: 5
     }
   ]
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: 'easeOut' }
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-ember-dark to-zinc-900 overflow-hidden">
-      {/* Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-ember-accent/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse" />
-      </div>
+    <section className="relative py-24 bg-[#080808] overflow-hidden">
+      <div className="absolute inset-0 opacity-20 pointer-events-none brick-pattern" />
 
-      {/* Navigation */}
-      <motion.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative z-50 flex items-center justify-between px-6 py-6 backdrop-blur-sm border-b border-zinc-800/50"
-      >
-        <div className="flex items-center gap-2">
-          <div className="text-3xl">🔥</div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-ember-accent to-orange-400 bg-clip-text text-transparent">
-            HandsUP
-          </span>
-          <span className="text-sm font-light text-zinc-400">FoodStack</span>
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-white">
+            GRAVADO NO <span className="text-amber-500">AÇO.</span>
+          </h2>
+          <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs mt-4">
+            O que os mestres churrasqueiros dizem do HNK
+          </p>
         </div>
-        <Link
-          href="/bem-estar"
-          className="px-6 py-2 rounded-lg bg-gradient-to-r from-ember-accent to-orange-600 hover:from-ember-accent/90 hover:to-orange-600/90 text-white font-semibold transition-all hover:shadow-lg hover:shadow-orange-500/20"
-        >
-          Entrar
-        </Link>
-      </motion.nav>
 
-      {/* Hero Section */}
-      <motion.section
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 min-h-[calc(100vh-80px)] flex items-center justify-center px-6 py-20"
-      >
-        <div className="max-w-6xl mx-auto w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Text Content */}
-            <motion.div variants={itemVariants} className="space-y-8">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="inline-block px-4 py-2 rounded-full border border-ember-accent/50 bg-ember-accent/10 backdrop-blur-sm"
-              >
-                <p className="text-sm text-ember-accent font-semibold">🚀 Plataforma de Alimentação Inteligente</p>
-              </motion.div>
-
-              <h1 className="text-5xl lg:text-7xl font-black leading-tight">
-                <span className="bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-                  Alimentação
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-ember-accent via-orange-400 to-red-500 bg-clip-text text-transparent">
-                  Sem Limites
-                </span>
-              </h1>
-
-              <p className="text-xl text-zinc-300 leading-relaxed max-w-lg">
-                Descubra a plataforma de pedidos mais avançada. Cardápios digitais, pagamentos seguros, e entrega em tempo real — tudo integrado.
-              </p>
-
-              <div className="flex flex-wrap gap-4 pt-4">
-                <Link
-                  href="/bem-estar"
-                  className="group px-8 py-4 rounded-xl bg-gradient-to-r from-ember-accent to-orange-600 hover:from-ember-accent/90 hover:to-orange-600/90 text-white font-bold flex items-center gap-2 transition-all hover:shadow-2xl hover:shadow-orange-500/30 hover:scale-105"
-                >
-                  Começar Agora
-                  <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-                </Link>
-                <button className="px-8 py-4 rounded-xl border-2 border-zinc-600 hover:border-ember-accent text-white font-bold transition-all hover:bg-ember-accent/10">
-                  Ver Demo
-                </button>
-              </div>
-
-              {/* Stats */}
-              <motion.div
-                variants={itemVariants}
-                className="grid grid-cols-3 gap-6 pt-8 border-t border-zinc-800"
-              >
-                <div>
-                  <p className="text-3xl font-bold text-ember-accent">50K+</p>
-                  <p className="text-sm text-zinc-400">Pedidos/Mês</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-orange-400">98%</p>
-                  <p className="text-sm text-zinc-400">Satisfação</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-red-400">24/7</p>
-                  <p className="text-sm text-zinc-400">Suporte</p>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Visual Element */}
-            <motion.div variants={itemVariants} className="relative">
-              <div className="relative w-full aspect-square rounded-2xl overflow-hidden">
-                {/* Gradient Background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-ember-accent/20 via-orange-500/20 to-red-500/20 rounded-2xl" />
-
-                {/* Animated Circles */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                    className="w-64 h-64 rounded-full border-2 border-ember-accent/30"
-                  />
-                  <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                    className="absolute w-48 h-48 rounded-full border-2 border-orange-500/30"
-                  />
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 4, repeat: Infinity }}
-                    className="absolute w-32 h-32 rounded-full bg-gradient-to-r from-ember-accent/40 to-orange-500/40 blur-2xl"
-                  />
-                </div>
-
-                {/* Center Icon */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.div
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="text-8xl"
-                  >
-                    🍕
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Features Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="relative z-10 py-32 px-6"
-      >
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <motion.h2
-              variants={itemVariants}
-              className="text-5xl font-black mb-6"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          {testimonials.map((t, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative group"
             >
-              <span className="bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
-                Tudo que você precisa
-              </span>
-            </motion.h2>
-            <motion.p
-              variants={itemVariants}
-              className="text-xl text-zinc-400 max-w-2xl mx-auto"
-            >
-              Recursos poderosos para restaurantes, pizzarias e entregas em geral
-            </motion.p>
-          </motion.div>
+              <div className="absolute -inset-2 bg-zinc-800 rounded-lg blur-[2px] opacity-50 group-hover:bg-amber-600/20 transition-colors" />
 
-          {/* Features Grid */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {features.map((feature, idx) => {
-              const Icon = feature.icon
-              return (
-                <motion.div
-                  key={idx}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className={`p-8 rounded-2xl border border-zinc-800 hover:border-ember-accent/50 bg-gradient-to-br ${feature.color} backdrop-blur-sm transition-all group cursor-pointer`}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-ember-accent/20 to-orange-500/20 flex items-center justify-center mb-4 group-hover:from-ember-accent/40 group-hover:to-orange-500/40 transition-all">
-                    <Icon className="text-ember-accent group-hover:text-orange-400 transition-colors" size={24} />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                  <p className="text-zinc-400">{feature.description}</p>
-                </motion.div>
-              )
-            })}
-          </motion.div>
-        </div>
-      </motion.section>
+              <div className="relative bg-gradient-to-br from-zinc-300 via-zinc-400 to-zinc-500 p-8 rounded-sm shadow-2xl border-b-4 border-r-4 border-zinc-600">
 
-      {/* CTA Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="relative z-10 py-32 px-6"
-      >
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="rounded-3xl overflow-hidden"
-          >
-            <div className="relative p-12 lg:p-20 bg-gradient-to-r from-ember-accent/10 via-orange-500/10 to-red-500/10 border border-ember-accent/30 backdrop-blur-xl">
-              {/* Background Glow */}
-              <div className="absolute inset-0 -z-10">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-ember-accent/20 rounded-full blur-3xl" />
-              </div>
+                {[...Array(4)].map((_, j) => (
+                  <div key={j} className={`absolute w-3 h-3 bg-zinc-600 rounded-full border border-zinc-800 shadow-inner ${j === 0 ? 'top-3 left-3' : j === 1 ? 'top-3 right-3' : j === 2 ? 'bottom-3 left-3' : 'bottom-3 right-3'
+                    }`} />
+                ))}
 
-              <motion.div variants={itemVariants} className="text-center space-y-8">
-                <h2 className="text-5xl font-black">
-                  <span className="bg-gradient-to-r from-white to-orange-300 bg-clip-text text-transparent">
-                    Pronto para revolucionar suas vendas?
-                  </span>
-                </h2>
-                <p className="text-xl text-zinc-300 max-w-2xl mx-auto">
-                  Junte-se aos melhores restaurantes que já triplicaram suas vendas com HandsUP FoodStack
-                </p>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Link
-                    href="/bem-estar"
-                    className="group px-10 py-4 rounded-xl bg-gradient-to-r from-ember-accent to-orange-600 hover:from-ember-accent/90 hover:to-orange-600/90 text-white font-bold flex items-center gap-2 transition-all hover:shadow-2xl hover:shadow-orange-500/40 hover:scale-105"
-                  >
-                    Acessar Platform
-                    <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-                  </Link>
-                </div>
+                <Quote className="text-zinc-800/20 absolute right-8 top-8" size={64} />
 
-                {/* Trust Indicators */}
-                <div className="flex flex-wrap justify-center gap-8 pt-12 border-t border-zinc-700/50">
-                  {[
-                    { icon: '✓', text: 'Setup em 5 minutos' },
-                    { icon: '✓', text: 'Sem taxa de setup' },
-                    { icon: '✓', text: 'Suporte 24/7' }
-                  ].map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-zinc-300">
-                      <span className="text-emerald-400 font-bold">{item.icon}</span>
-                      {item.text}
-                    </div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(t.rating)].map((_, k) => (
+                    <Star key={k} size={16} className="fill-zinc-900 text-zinc-900" />
                   ))}
                 </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-zinc-800/50 py-12 px-6">
-        <div className="max-w-7xl mx-auto text-center text-zinc-500">
-          <p>© 2026 HandsUP FoodStack. Transformando o setor de alimentação. 🔥</p>
+                <p className="text-zinc-950 font-bold italic text-lg leading-tight mb-6">
+                  "{t.text}"
+                </p>
+
+                <div className="border-t border-zinc-500/50 pt-4 flex items-center justify-between">
+                  <div>
+                    <h4 className="text-zinc-950 font-black uppercase tracking-tighter">{t.name}</h4>
+                    <span className="text-zinc-700 text-[10px] font-black uppercase tracking-widest">{t.role}</span>
+                  </div>
+                  <div className="w-10 h-1 bg-amber-600" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </footer>
-    </div>
+      </div>
+    </section>
+  )
+}
+
+// ============================================
+// 5. INDUSTRIAL FOOTER
+// ============================================
+const IndustrialFooter = () => {
+  const currentYear = new Date().getFullYear()
+
+  const menuSections = [
+    {
+      title: "Sistema",
+      links: [
+        { name: "Cardápio Digital", href: "/sistema/cardapio" },
+        { name: "Gestão de Pedidos", href: "/sistema/pedidos" },
+        { name: "IA para WhatsApp", href: "/sistema/ia" },
+        { name: "Analytics Pro", href: "/sistema/analytics" }
+      ]
+    },
+    {
+      title: "Empresa",
+      links: [
+        { name: "Sobre a HNK", href: "/sobre" },
+        { name: "Seja um Parceiro", href: "/parceiros" },
+        { name: "Blog da Brasa", href: "/blog" },
+        { name: "Carreiras", href: "/vagas" }
+      ]
+    },
+    {
+      title: "Suporte",
+      links: [
+        { name: "Central de Ajuda", href: "/ajuda" },
+        { name: "API Docs", href: "/docs" },
+        { name: "Status do Sistema", href: "/status" },
+        { name: "Contato", href: "/contato" }
+      ]
+    }
+  ]
+
+  return (
+    <footer className="relative bg-[#050505] border-t border-zinc-900 pt-20 pb-10 overflow-hidden">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-32 bg-amber-500/10 blur-[100px] pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-20">
+
+          <div className="lg:col-span-2 space-y-6">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-zinc-900 border border-zinc-800 rounded-lg">
+                <Flame className="text-amber-500" size={24} />
+              </div>
+              <span className="text-2xl font-black uppercase italic tracking-tighter text-white">
+                HNK <span className="text-amber-500">Food Stack</span>
+              </span>
+            </div>
+            <p className="text-zinc-500 font-medium text-sm leading-relaxed max-w-sm">
+              Forjando a tecnologia que sustenta os maiores mestres churrasqueiros do país.
+              Do aço do código ao calor da venda.
+            </p>
+            <div className="flex gap-4">
+              {[Instagram, Linkedin, Twitter].map((Icon, i) => (
+                <Link key={i} href="#" className="p-3 bg-zinc-900 border border-zinc-800 rounded-full text-zinc-500 hover:text-amber-500 hover:border-amber-500 transition-all">
+                  <Icon size={18} />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {menuSections.map((section) => (
+            <div key={section.title}>
+              <h4 className="text-white font-black uppercase italic tracking-widest text-xs mb-6 border-b border-zinc-800 pb-2">
+                {section.title}
+              </h4>
+              <ul className="space-y-4">
+                {section.links.map((link) => (
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-zinc-500 hover:text-white text-sm font-bold transition-colors flex items-center gap-2 group">
+                      <div className="w-1 h-1 bg-amber-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="pt-10 border-t border-zinc-900/50 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">
+              <ShieldCheck size={14} className="text-emerald-500" />
+              Ambiente Seguro & Criptografado
+            </div>
+            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">
+              <MapPin size={14} />
+              HQ: Campinas, SP - BR
+            </div>
+          </div>
+
+          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-700">
+            © {currentYear} HNK Food Stack // <span className="text-zinc-500">All rights reserved.</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="h-1 w-full bg-gradient-to-r from-transparent via-zinc-800 to-transparent mt-10" />
+    </footer>
+  )
+}
+
+// ============================================
+// MAIN PAGE
+// ============================================
+export default function LandingPage() {
+  return (
+    <main className="w-full bg-[#050505]">
+      <HeroIndustrial />
+      <FeaturePlates />
+      <BrickTestimonials />
+      <IndustrialFooter />
+    </main>
   )
 }
