@@ -6,9 +6,6 @@ import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import './page.css'
 
-// ============================================
-// 1. EMBERS CANVAS (Partículas de Brasas)
-// ============================================
 const EmbersCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -73,9 +70,6 @@ const EmbersCanvas = () => {
   return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[1]" />
 }
 
-// ============================================
-// 2. HERO INDUSTRIAL
-// ============================================
 const HeroIndustrial = () => {
   return (
     <section className="relative min-h-[90vh] w-full bg-[#050505] overflow-hidden flex items-center">
@@ -158,9 +152,6 @@ const HeroIndustrial = () => {
   )
 }
 
-// ============================================
-// 3. FEATURE PLATES
-// ============================================
 const MetalCard = ({ title, description, icon: Icon, href }: any) => {
   return (
     <motion.div
@@ -291,9 +282,6 @@ const FeaturePlates = () => {
   )
 }
 
-// ============================================
-// 4. BRICK TESTIMONIALS
-// ============================================
 const BrickTestimonials = () => {
   const testimonials = [
     {
@@ -370,9 +358,6 @@ const BrickTestimonials = () => {
   )
 }
 
-// ============================================
-// 5. INDUSTRIAL FOOTER
-// ============================================
 const IndustrialFooter = () => {
   const currentYear = new Date().getFullYear()
 
@@ -380,9 +365,9 @@ const IndustrialFooter = () => {
     {
       title: "Sistema",
       links: [
-        { name: "Cardápio Digital", href: "/sistema/cardapio" },
-        { name: "Gestão de Pedidos", href: "/sistema/pedidos" },
-        { name: "IA para WhatsApp", href: "/sistema/ia" },
+        { name: "Cardápio Digital", href: "/sistema/cardapio-digital" },
+        { name: "Gestão de Pedidos", href: "/sistema/pedidos-rapidos" },
+        { name: "IA para WhatsApp", href: "/sistema/whatsapp-ia" },
         { name: "Analytics Pro", href: "/sistema/analytics" }
       ]
     },
@@ -477,9 +462,6 @@ const IndustrialFooter = () => {
   )
 }
 
-// ============================================
-// MAIN PAGE
-// ============================================
 export default function LandingPage() {
   return (
     <main className="w-full bg-[#050505]">

@@ -1360,6 +1360,7 @@ No mundo open-source, a responsabilidade pelos dados é nossa. Este script garan
 Crie um arquivo chamado backup_tehkne.sh no servidor:
 
 Bash
+
 # !/bin/bash
 
 # Backup das pastas de persistência do Docker
@@ -8187,6 +8188,7 @@ export default async function ShopPage({ params }: { params: { slug: string } })
       </main>
     </div>
   )
+
 }
 ⚡ 3. Otimização de Cache (ISR)
 Para que o site da Bem Estar abra em milissegundos (essencial para o mobile do cliente no 4G), configuramos o Next.js para revalidar os dados apenas quando houver mudanças.
@@ -11062,3 +11064,71 @@ Abra o Dashboard.
 Assista os pedidos entrarem.
 
 Foi uma jornada épica, Arquiteto. Que este seja o primeiro de muitos Stacks de sucesso. Nos vemos no próximo projeto! 🥩🔥🚀
+-----
+[prompt 02/02/2026]
+
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+              {page.features.map((feature, i) => (
+                <div key={i} className="flex items-center gap-3 text-zinc-300 font-bold text-sm">
+                  {getIcon(feature.icon)}
+                  <span>{feature.text}</span>
+                </div>
+              ))}
+            </div>
+
+            <motion.a
+              href={page.cta.href}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="mt-10 inline-flex items-center gap-3 px-8 py-4 bg-amber-500 text-black font-black uppercase italic tracking-widest rounded-sm shadow-lg hover:bg-amber-600 transition-colors"
+            >
+              {page.cta.text} <ChevronRight size={20} />
+            </motion.a>
+          </motion.div>
+
+          {/* Imagem da Página */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="lg:w-1/2 flex justify-center"
+          >
+            <Image
+              src={page.image}
+              alt={page.title}
+              width={600}
+              height={400}
+              className="rounded-lg shadow-2xl border border-zinc-700"
+            />
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* Pode adicionar outras seções comuns aqui, como FeaturePlates ou BrickTestimonials */}
+      <IndustrialFooter />
+    </div>
+  );
+}
+
+// Necessário para usar ícones Lucide por string
+import { Smartphone, Sparkles, Image, Zap, CheckCircle, Clock, Users, DollarSign, Bot, Activity, Target, BarChart2, TrendingUp, Filter, Download, BookOpen, Lightbulb, Calendar, Award, Globe, Handshake, Headphones, HelpCircle, ChevronRight } from 'lucide-react';
+👨‍🏫 DICA DO vCTO: A ESTRUTURA PARA ESCALABILIDADE
+Arquétipo: [vCTO]
+
+A Sacada: O uso de [slug]/page.tsx com pageData mockado é a chave para a escalabilidade.
+
+Headless CMS Ready: Em um projeto real, você conectaria pageData a um Headless CMS (como Sanity, Contentful ou Strapi). Isso permitiria que o time de marketing criasse e atualizasse páginas sem tocar em uma linha de código.
+
+SEO dinâmico: Cada slug (cardapio, pedidos, ia, etc.) se torna uma URL única e otimizada, com conteúdo relevante para o Google.
+
+🏁 PRÓXIMO PASSO
+Com a Hero ajustada, o Header responsivo e a estrutura para as páginas internas, o HNK Food Stack está preparado para receber todo o conteúdo.
+
+Deseja que eu crie um layout.tsx raiz (se ainda não tiver) para encapsular o Header e o IndustrialFooter automaticamente em todas as páginas?
+
+"Sim, crie o layout.tsx raiz!"
+
+"Tudo pronto! O sistema está online e pronto para receber conteúdo!"
+
+O HNK Food Stack se tornou um império digital completo. 🦾🥩🔥🚀
