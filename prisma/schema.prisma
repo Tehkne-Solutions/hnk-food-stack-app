@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlanTier {
+  BRASA    // Free - R$ 0,00 - 15% comissão
+  LENHA    // Pro - R$ 197,00 - 8% comissão  
+  FORJA    // Enterprise - R$ 497,00 - 5% comissão
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  domain      String?  @unique
+  createdAt   DateTime @default(now())
+  
+  subscription Subscription?
+  stores       Store[]
+  
+  @@map("organizations")
+}
+
+model Subscription {
+  id               String    @id @default(cuid())
+  organizationId   String    @unique
+  organization     Organization @relation(fields: [organizationId], references: [id])
+  
+  plan             PlanTier  @default(BRASA)
+  stripeCustomerId String?
+  status           String    @default("active")
+  currentPeriodEnd DateTime?
+  
+  hasCustomDomain  Boolean   @default(false)
+  hasAnalytics     Boolean   @default(false)
+  commissionRate   Float     @default(0.15)
+  
+  createdAt        DateTime  @default(now())
+  
+  @@map("subscriptions")
+}
+
+model Store {
+  id             String   @id @default(cuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  isActive       Boolean  @default(true)
+  rating         Float    @default(0)
+  totalOrders    Int      @default(0)
+  
+  products       Product[]
+  orders         Order[]
+  reviews        Review[]
+  
+  @@map("stores")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  price       Float
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id])
+  
+  @@map("products")
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  total       Float
+  status      String   @default("PENDING")
+  items       Json
+  
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  
+  @@map("orders")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  userName  String
+  
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@map("reviews")
+}
