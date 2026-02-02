@@ -1,155 +1,123 @@
-/**
- * @name Header Component
- * @description Header dinâmico sticky com logo, nome loja, menu burger mobile
- * @version 1.0
- * 
- * Features:
- * - Sticky top com z-index
- * - Logo + nome da loja
- * - Menu burger mobile (Lucide)
- * - Navegação (Home, Cardápio, Contato, Admin)
- * - Dark theme Ember System
- * - Integração com tenant context
- * 
- * @example
- * <Header storeName="Churrascaria Bem Estar" />
- */
-
 'use client'
 
-import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Home, MapPin, Phone, Settings } from 'lucide-react'
-import { useTenant } from '@/hooks/use-tenant'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Menu, X, Flame } from 'lucide-react'
 
-interface HeaderProps {
-    storeName?: string
-    logoUrl?: string
-}
+export const Header = () => {
+    const [isOpen, setIsOpen] = useState(false)
+    const [isScrolled, setIsScrolled] = useState(false)
 
-export function Header({ storeName = 'HNK Food Stack', logoUrl }: HeaderProps) {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const { tenant } = useTenant()
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50)
+        }
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
 
-    const navItems = [
-        { label: 'Home', href: '/', icon: Home },
-        { label: 'Cardápio', href: '#menu', icon: MapPin },
-        { label: 'Contato', href: '#contact', icon: Phone },
-        { label: 'Admin', href: '/admin', icon: Settings },
+    const navLinks = [
+        { name: "Cardápio", href: "/cardapio" },
+        { name: "Pedidos", href: "/pedidos" },
+        { name: "IA", href: "/ia" },
+        { name: "Analytics", href: "/analytics" },
+        { name: "Blog", href: "/blog" },
+        { name: "Sobre", href: "/sobre" },
+        { name: "Suporte", href: "/suporte" },
     ]
 
     return (
-        <header
-            className={`
-        sticky top-0 z-40 w-full
-        bg-zinc-900/95 border-b border-zinc-700/50
-        backdrop-blur-xl
-      `}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16 sm:h-20">
-                    {/* Logo + Store Name */}
-                    <Link href="/" className="flex items-center gap-3 flex-1 group">
-                        {logoUrl ? (
-                            <img
-                                src={logoUrl}
-                                alt={storeName}
-                                className="h-10 w-10 rounded-lg object-cover group-hover:scale-110 transition-transform"
-                            />
-                        ) : (
-                            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-ember-accent to-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <span className="text-white font-bold text-sm">HNK</span>
-                            </div>
-                        )}
-                        <div className="hidden sm:block">
-                            <h1 className="text-lg font-bold text-white group-hover:text-amber-400 transition-colors">
-                                {storeName}
-                            </h1>
-                            <p className="text-xs text-zinc-400">Cardápio Digital</p>
-                        </div>
-                    </Link>
+        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+            ? 'bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800/30'
+            : 'bg-transparent'
+            }`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
+                {/* Logo + Brand */}
+                <Link href="/" className="flex items-center gap-3 group hover:opacity-90 transition">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-700 flex items-center justify-center group-hover:shadow-fire-glow transition">
+                        <Flame size={20} className="text-white" />
+                    </div>
+                    <span className="hidden sm:inline text-white font-bold text-lg">HNK Food Stack</span>
+                </Link>
 
-                    {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-1">
-                        {navItems.map((item) => {
-                            const Icon = item.icon
-                            return (
-                                <Link
-                                    key={item.label}
-                                    href={item.href}
-                                    className={`
-                    flex items-center gap-2 px-3 py-2 rounded-lg
-                    text-sm font-medium
-                    text-zinc-300 hover:text-white
-                    hover:bg-zinc-800/50
-                    transition-all duration-200
-                  `}
-                                >
-                                    <Icon size={16} />
-                                    {item.label}
-                                </Link>
-                            )
-                        })}
-                    </nav>
+                {/* Desktop Navigation */}
+                <nav className="hidden md:flex items-center gap-8">
+                    {navLinks.map((link) => (
+                        <Link
+                            key={link.name}
+                            href={link.href}
+                            className="text-sm text-zinc-300 hover:text-amber-500 transition-colors duration-200 font-medium"
+                        >
+                            {link.name}
+                        </Link>
+                    ))}
+                </nav>
 
-                    {/* Mobile Menu Button */}
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className={`
-              md:hidden p-2 rounded-lg
-              hover:bg-zinc-800 transition-colors
-              text-white
-            `}
-                        aria-label="Menu"
+                {/* Desktop CTA Buttons */}
+                <div className="hidden md:flex items-center gap-3">
+                    <Link
+                        href="/login"
+                        className="px-5 py-2 text-sm font-medium text-amber-500 border border-amber-500 rounded-full hover:bg-amber-500/10 transition-colors duration-200"
                     >
-                        {mobileMenuOpen ? (
-                            <X size={24} />
-                        ) : (
-                            <Menu size={24} />
-                        )}
-                    </motion.button>
+                        ENTRAR
+                    </Link>
+                    <Link
+                        href="/signup"
+                        className="px-5 py-2 text-sm font-medium text-white bg-amber-600 rounded-full hover:bg-amber-700 transition-colors duration-200"
+                    >
+                        CADASTRAR
+                    </Link>
                 </div>
+
+                {/* Mobile Hambúrguer Button */}
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="md:hidden p-2 hover:bg-zinc-800/50 rounded-lg transition text-white"
+                    aria-label="Toggle menu"
+                >
+                    {isOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Navigation Menu */}
             <AnimatePresence>
-                {mobileMenuOpen && (
-                    <motion.nav
+                {isOpen && (
+                    <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className={`
-              md:hidden
-              bg-zinc-800/50 border-t border-zinc-700/50
-              backdrop-blur-xl
-            `}
+                        className="md:hidden bg-[#050505]/95 backdrop-blur-md border-t border-zinc-800/30"
                     >
-                        <div className="max-w-7xl mx-auto px-4 py-4 space-y-2">
-                            {navItems.map((item) => {
-                                const Icon = item.icon
-                                return (
-                                    <Link
-                                        key={item.label}
-                                        href={item.href}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className={`
-                      flex items-center gap-3 w-full px-4 py-3 rounded-lg
-                      text-sm font-medium
-                      text-zinc-300 hover:text-white
-                      hover:bg-zinc-700/50
-                      transition-all duration-200
-                    `}
-                                    >
-                                        <Icon size={18} />
-                                        {item.label}
-                                    </Link>
-                                )
-                            })}
-                        </div>
-                    </motion.nav>
+                        <nav className="flex flex-col gap-2 p-6">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    className="px-4 py-3 text-zinc-300 hover:text-amber-500 hover:bg-zinc-800/50 rounded-lg transition-colors duration-200 font-medium"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                            <div className="border-t border-zinc-700/30 my-4 pt-4 flex flex-col gap-3">
+                                <Link
+                                    href="/login"
+                                    className="w-full px-5 py-3 text-sm font-medium text-center text-amber-500 border border-amber-500 rounded-full hover:bg-amber-500/10 transition-colors duration-200"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    ENTRAR
+                                </Link>
+                                <Link
+                                    href="/signup"
+                                    className="w-full px-5 py-3 text-sm font-medium text-center text-white bg-amber-600 rounded-full hover:bg-amber-700 transition-colors duration-200"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    CADASTRAR
+                                </Link>
+                            </div>
+                        </nav>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </header>
